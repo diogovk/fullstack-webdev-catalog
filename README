@@ -1,0 +1,11 @@
+
+## Starting the webapp
+
+```
+./web-catalog.py
+```
+
+### References
+https://developers.google.com/identity/sign-in/web/backend-auth
+http://flask.pocoo.org/docs/0.10/api/
+http://stackoverflow.com/questions/20646822/how-to-serve-static-files-in-flask
