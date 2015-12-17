@@ -26,6 +26,11 @@ function onSignIn(googleUser) {
         </script>
     </head>
     <body>
+        <ul>
+            {% for category in categories %}
+            <li> {{ category.name }} </li>
+            {% endfor %}
+        </ul>
         <div class="g-signin2" data-onsuccess="onSignIn"></div>
     </body>
 </html>

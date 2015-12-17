@@ -1,6 +1,6 @@
 #!/usr/bin/python2
 
-from flask import request
+from flask import request, render_template
 from oauth2client import client, crypt
 from app import app, db
 
@@ -9,7 +9,9 @@ MY_CLIENT_ID='969890289717-96158do2n0gntojond0bnrmor86gdriu.apps.googleuserconte
 from models import Category
 
 @app.route('/')
-def login_page():
+def home():
+    categories = Category.query.all()
+    return render_template('home.html', categories=categories)
     return app.send_static_file('google_sign_in.html')
 
 @app.route('/oauth_check', methods=['POST'])
