@@ -2,6 +2,9 @@
 ## Initilizing database
 
 ```
+# Create the database in postgresql
+createdb webcatalog
+
 python2 migrator.py db init
 python2 migrator.py db upgrade
 ```
@@ -11,6 +14,11 @@ python2 migrator.py db upgrade
 python2 migrator.py db migrate
 # Check the migration file, and when finished:
 python2 migrator.py db upgrade
+```
+
+## Populate the database with seed data
+```
+python2 seed_database.py
 ```
 
 ## Starting the webapp
