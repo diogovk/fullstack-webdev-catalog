@@ -55,3 +55,6 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# The database containg the actual data should not be included in the project
+app.db

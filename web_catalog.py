@@ -1,10 +1,12 @@
 #!/usr/bin/python2
 
-from flask import Flask, request
+from flask import request
 from oauth2client import client, crypt
+from app import app, db
 
-app = Flask(__name__)
 MY_CLIENT_ID='969890289717-96158do2n0gntojond0bnrmor86gdriu.apps.googleusercontent.com'
+
+from models import Category
 
 @app.route('/')
 def login_page():
