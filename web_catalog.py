@@ -6,13 +6,12 @@ from app import app, db
 
 MY_CLIENT_ID='969890289717-96158do2n0gntojond0bnrmor86gdriu.apps.googleusercontent.com'
 
-from models import Category
+from models import Category, Item
 
 @app.route('/')
 def home():
     categories = Category.query.all()
     return render_template('home.html', categories=categories)
-    return app.send_static_file('google_sign_in.html')
 
 @app.route('/oauth_check', methods=['POST'])
 def oauth_check():
@@ -23,6 +22,12 @@ def oauth_check():
     if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
         return ('Wrong issuer', 403)
     return ('ok', 200)
+
+@app.route('/category/<id>/items')
+def list_items(id):
+    items = Item.query.filter_by(category_id = id).all()
+    return render_template('items.html', items=items);
+
 
 
 if __name__ == '__main__':
