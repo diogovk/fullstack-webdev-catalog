@@ -17,3 +17,8 @@ function onSignIn(googleUser) {
             }
         });
 }
+
+/* updates title, and loads category content page */
+function selectCategory(name, id) {
+    document.getElementById("header-title").textContent=name;
+}

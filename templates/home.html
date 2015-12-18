@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <meta name="google-signin-client_id" content="969890289717-96158do2n0gntojond0bnrmor86gdriu.apps.googleusercontent.com">
-    <title>Item Catalog</title>
+    <title>Catalog App</title>
     <!-- provides easy http requests -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/superagent/1.2.0/superagent.min.js"></script>
 
@@ -22,14 +22,14 @@
       <header class="mdl-layout__header">
         <div class="mdl-layout__header-row">
           <div class="mdl-layout-spacer"></div>
-          <span class=mdl-layout-title>Catalog App</span>
+          <span id="header-title" class=mdl-layout-title>Catalog App</span>
         </div>
       </header>
       <div class="mdl-layout__drawer">
         <span class="mdl-layout-title">Categories</span>
         <nav class="mdl-navigation">
           {% for category in categories %}
-            <a href="#" class="mdl-navigation__link">{{ category.name }}</a>
+          <a href="#" class="mdl-navigation__link" onclick='selectCategory("{{category.name}}", {{category.id}})'>{{ category.name }}</a>
           {% endfor %}
         </nav>
       </div>
