@@ -1,12 +1,21 @@
+<!doctype html>
 <html>
-    <head>
-        <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-        <meta name="google-signin-client_id" content="969890289717-96158do2n0gntojond0bnrmor86gdriu.apps.googleusercontent.com">
-        <title>Item Catalog</title>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta name="google-signin-client_id" content="969890289717-96158do2n0gntojond0bnrmor86gdriu.apps.googleusercontent.com">
+    <title>Item Catalog</title>
+    <!-- provides easy http requests -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/superagent/1.2.0/superagent.min.js"></script>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/superagent/1.2.0/superagent.min.js"></script>
-        <script src="https://apis.google.com/js/platform.js" async defer></script>
-        <script type="text/javascript" charset="utf-8">
+    <!-- Google Sign-in -->
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+    <!-- Material desing light -->
+    <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.6/material.blue-orange.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src="https://storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js"></script>
+
+    <script type="text/javascript" charset="utf-8">
 var request = window.superagent;
 function onSignIn(googleUser) {
     var profile = googleUser.getBasicProfile();
@@ -23,14 +32,30 @@ function onSignIn(googleUser) {
             }
         });
 }
-        </script>
-    </head>
-    <body>
-        <ul>
-            {% for category in categories %}
-            <li> {{ category.name }} </li>
-            {% endfor %}
-        </ul>
-        <div class="g-signin2" data-onsuccess="onSignIn"></div>
-    </body>
+    </script>
+  </head>
+  <body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
+      <header class="mdl-layout__header">
+        <div class="mdl-layout__header-row">
+          <div class="mdl-layout-spacer"></div>
+          <span class=mdl-layout-title>Catalog App</span>
+        </div>
+      </header>
+      <div class="mdl-layout__drawer">
+        <span class="mdl-layout-title">Categories</span>
+        <nav class="mdl-navigation">
+          {% for category in categories %}
+            <a href="#" class="mdl-navigation__link">{{ category.name }}</a>
+          {% endfor %}
+        </nav>
+      </div>
+      <main class="mdl-layout__content">
+        <div class="page-content">
+          <div class="g-signin2" data-onsuccess="onSignIn"></div>
+          Select a category to begin.
+        </div>
+      </main>
+    </div>
+  </body>
 </html>
