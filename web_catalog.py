@@ -23,7 +23,7 @@ def oauth_check():
         return ('Wrong issuer', 403)
     return ('ok', 200)
 
-@app.route('/category/<id>/items')
+@app.route('/category/<id>/items', methods=['GET'])
 def list_items(id):
     items = Item.query.filter_by(category_id = id).all()
     return render_template('items.html', items=items);
