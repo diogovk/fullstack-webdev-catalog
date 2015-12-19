@@ -20,5 +20,11 @@ function onSignIn(googleUser) {
 
 /* updates title, and loads category content page */
 function selectCategory(name, id) {
-    document.getElementById("header-title").textContent=name;
+    request.get('/category/'+id+'/items')
+        .end(function(err, res){
+            if (res.ok) {
+                document.getElementById("header-title").textContent=name;
+                document.getElementById("items-list").innerHTML = res.text;
+            }
+        });
 }
