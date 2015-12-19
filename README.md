@@ -1,11 +1,18 @@
 
+## Dependencies
+
+```
+python2-flask
+python2-psycopg2
+Flask-Migrate
+```
+
 ## Initilizing database
 
 ```
 # Create the database in postgresql
 createdb webcatalog
 
-python2 migrator.py db init
 python2 migrator.py db upgrade
 ```
 
