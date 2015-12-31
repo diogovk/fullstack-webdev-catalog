@@ -10,6 +10,8 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres:///webcatalog'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'mkd89$lpkkbeshuretochangeme'
+# uploaded images should not have more than 2MB
+app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024
 
 db = SQLAlchemy(app)
 
