@@ -5,6 +5,7 @@ from oauth2client import client, crypt
 from app import app, db
 from forms import NewItemForm
 from flask_wtf.csrf import CsrfProtect
+from models import Item
 
 MY_CLIENT_ID='969890289717-96158do2n0gntojond0bnrmor86gdriu.apps.googleusercontent.com'
 
@@ -41,6 +42,9 @@ def new_item(id):
 def create_item(id):
     form = NewItemForm()
     if form.validate_on_submit():
+        new_item = Item(name = form.data["name"], category_id = id)
+        db.session.add(new_item)
+        db.session.commit()
         return "ok"
     print(form.name.errors)
     return render_template('new_item.html', category_id = id, form=form)
