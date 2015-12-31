@@ -3,6 +3,7 @@
 
 ```
 python2-flask
+python2-flask-wtf
 python2-psycopg2
 Flask-Migrate
 ```

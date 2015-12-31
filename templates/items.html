@@ -1,4 +1,44 @@
+
+<style>
+.new-item-card.mdl-card {
+    background: #3E4EB8;
+}
+
+.new-item-card > .mdl-card__actions {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.new-item-card > .mdl-card__title {
+    align-items: flex-start;
+}
+
+.item-card > .mdl-card__title > h4 {
+    margin-top: 0;
+}
+
+.new-item-card > .mdl-card__actions {
+    display: flex;
+        box-sizing: border-box;
+            align-items: center;
+}
+
+.new-item-card > .mdl-card__title,
+.new-item-card > .mdl-card__actions,
+.new-item-card > .mdl-card__actions > .mdl-button {
+    color: #fff;
+}
+</style>
+
 <div class="mdl-grid">
+    <div class="mdl-cell mdl-cell--4-col new-item-card item-card mdl-card mdl-shadow--2dp">
+      <div class="mdl-card__title mdl-card--expand">
+        <h4>  Coundn't find your item? </h4>
+      </div>
+      <div class="mdl-card__actions mdl-card--border">
+        <a href="#" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" onclick="createNewItem({{category_id}})">Add new Item</a>
+        <div class="mdl-layout-spacer"></div>
+      </div>
+    </div>
 {% for item in items %}
     <div class="mdl-cell mdl-cell--4-col mdl-card mdl-shadow--2dp">
       <div class="mdl-card__supporting-text">
@@ -7,3 +47,4 @@
     </div>
 {% endfor %}
 </div>
+

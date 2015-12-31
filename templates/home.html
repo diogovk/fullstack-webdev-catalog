@@ -6,6 +6,7 @@
     <title>Catalog App</title>
     <!-- provides easy http requests -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/superagent/1.2.0/superagent.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/0.10.1/fetch.js"></script>
 
     <!-- Google Sign-in -->
     <script src="https://apis.google.com/js/platform.js" async defer></script>
@@ -35,7 +36,7 @@
         </nav>
       </div>
       <main class="mdl-layout__content">
-        <div class="page-content" id="items-list">
+        <div class="page-content">
           <div class="g-signin2" data-onsuccess="onSignIn"></div>
           Select a category to begin.
         </div>

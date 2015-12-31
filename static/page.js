@@ -1,7 +1,9 @@
 
 "use strict";
-console.log("starting");
 var request = window.superagent;
+var $ = document.querySelector.bind(document);
+var currentSelectedCategory = null;
+
 function onSignIn(googleUser) {
     var profile = googleUser.getBasicProfile();
     var id_token = googleUser.getAuthResponse().id_token;
@@ -18,13 +20,51 @@ function onSignIn(googleUser) {
         });
 }
 
-/* updates title, and loads category content page */
-function selectCategory(name, id) {
-    request.get('/category/'+id+'/items')
+function loadInPageContent(url, title) {
+    request.get(url)
         .end(function(err, res){
             if (res.ok) {
-                document.getElementById("header-title").textContent=name;
-                document.getElementById("items-list").innerHTML = res.text;
+                $("#header-title").textContent=title+" - Catalog App";
+                $(".page-content").innerHTML = res.text;
+                componentHandler.upgradeDom();
             }
         });
+}
+
+/* updates title, and loads category content page */
+function selectCategory(name, id) {
+    loadInPageContent('/category/'+id+'/items', name);
+    // used for "going back"
+    currentSelectedCategory = { id: id, name: name };
+}
+
+function createNewItem(id) {
+    loadInPageContent('/category/'+id+'/items/new', 'Adding New Item');
+}
+
+function cancelNewItem() {
+  loadLastCategory();
+}
+
+function loadLastCategory() {
+  if (currentSelectedCategory) {
+    selectCategory(currentSelectedCategory.name, currentSelectedCategory.id);
+  }
+}
+
+function postItem(id) {
+  fetch('/category/'+id+'/items/create', {
+    credentials: 'same-origin', //send cookies
+    method: 'post',
+    body: new FormData($("form"))
+  }).then(function(response) {
+    return response.text();
+  }).then(function(body) {
+    if ( body == 'ok'){
+      loadLastCategory();
+    } else {
+      $(".page-content").innerHTML = body;
+      componentHandler.upgradeDom();
+    }
+  });
 }
