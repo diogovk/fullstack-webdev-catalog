@@ -1,6 +1,5 @@
 
 "use strict";
-var request = window.superagent;
 var $ = document.querySelector.bind(document);
 var currentSelectedCategory = null;
 
@@ -8,27 +7,27 @@ function onSignIn(googleUser) {
     var profile = googleUser.getBasicProfile();
     var id_token = googleUser.getAuthResponse().id_token;
     console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-    console.log('Name: ' + profile.getName());
-    console.log('Image URL: ' + profile.getImageUrl());
-    console.log('Email: ' + profile.getEmail());
-    request.post('/oauth_check')
-        .send({ token: id_token })
-        .end(function(err, res){
-            if (res.text == "ok") {
-                alert("Logged in successfuly");
-            }
-        });
+    //request.post('/oauth_check')
+    //    .send({ token: id_token })
+    //    .end(function(err, res){
+    //        if (res.text == "ok") {
+    //            alert("Logged in successfuly");
+    //        }
+    //    });
 }
 
 function loadInPageContent(url, title) {
-    request.get(url)
-        .end(function(err, res){
-            if (res.ok) {
-                $("#header-title").textContent=title+" - Catalog App";
-                $(".page-content").innerHTML = res.text;
-                componentHandler.upgradeDom();
-            }
-        });
+    fetch(url, {
+      credentials: 'same-origin', //send cookies
+      }).then(function(response) {
+        return response.text();
+      }).then(function(body) {
+        $("#header-title").textContent = title + " - Catalog App";
+        $(".page-content").innerHTML = body;
+        componentHandler.upgradeDom();
+        console.log(body);
+      });
+
 }
 
 /* updates title, and loads category content page */
