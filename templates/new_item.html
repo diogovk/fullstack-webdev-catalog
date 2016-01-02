@@ -12,6 +12,9 @@
     <span class="mdl-textfield__error">{{error}}</span>
     {% endfor %}
   </div>
+  <div>
+    {{ form.image_file() }}
+  </div>
   <button onclick="cancelNewItem()" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
     Cancel
   </button>
