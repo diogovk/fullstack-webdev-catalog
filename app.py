@@ -12,6 +12,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'mkd89$lpkkbeshuretochangeme'
 # uploaded images should not have more than 2MB
 app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024
+app.config['IMAGE_FOLDER'] = './static/images'
+app.config['ALLOWED_IMG_EXTENSIONS'] = set(['png', 'PNG', 'jpg', 'JPG'])
 
 db = SQLAlchemy(app)
 
