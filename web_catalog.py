@@ -6,13 +6,10 @@ from app import app, db
 from forms import NewItemForm
 from flask_wtf.csrf import CsrfProtect
 from models import Item
-from hashlib import md5
-import os
 from models import Category, Item
+from helpers import get_image_extension, save_image
 
 MY_CLIENT_ID='969890289717-96158do2n0gntojond0bnrmor86gdriu.apps.googleusercontent.com'
-UPLOAD_FOLDER='./static/images'
-ALLOWED_EXTENSIONS = set(['png', 'PNG', 'jpg', 'JPG'])
 
 
 @app.route('/')
@@ -41,7 +38,6 @@ def list_items(id):
 @app.route('/category/<int:id>/items/new')
 def new_item(id):
     form = NewItemForm()
-    print(form.errors)
     return render_template('new_item.html', category_id = id, form=form)
 
 
@@ -49,40 +45,15 @@ def new_item(id):
 def create_item(id):
     form = NewItemForm()
     if form.validate_on_submit():
-        new_item = Item(name = form.data["name"], category_id = id)
+        file = request.files[form.image_file.name]
+        saved_path = save_image(file)
+        new_item = Item(name = form.data["name"],
+                category_id = id,
+                image_file = saved_path)
         db.session.add(new_item)
         db.session.commit()
         return "ok"
-    print(form.name.errors)
     return render_template('new_item.html', category_id = id, form=form)
-
-
-def get_image_extension(filename):
-    """ Returns the file extension if the extension is allowed, otherwise None """
-    if '.' in filename:
-        extension=filename.rsplit('.', 1)[1]
-        if extension:
-            return extension
-    return None
-
-
-@app.route('/upload_image', methods=['POST', 'GET'])
-def upload_image():
-    form = NewItemForm()
-    if request.method == 'POST':
-        file = request.files['file']
-        if file:
-            extension = get_image_extension(file.filename)
-            # Save image using it's hash as filename, so two uploads with the
-            # same name don't clash with each other
-            if extension:
-                md5_hash = md5(file.read()).hexdigest()
-                filename = md5_hash + '.' + extension
-                savepath=os.path.join(UPLOAD_FOLDER, filename)
-                file.seek(0)
-                file.save(savepath)
-                return '''Success'''
-    return render_template('upload_image.html', form=form)
 
 
 if __name__ == '__main__':
