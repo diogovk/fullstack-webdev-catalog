@@ -9,6 +9,7 @@ class NewItemForm(Form):
         validators.Length(min=3, max=128),
         validators.DataRequired()
         ])
+    description = TextField('Title', [])
     image_file = FileField('Image', [])
 
     def validate_image_file(form, field):
