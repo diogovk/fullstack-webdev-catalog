@@ -49,6 +49,7 @@ def create_item(id):
         saved_path = save_image(file)
         new_item = Item(name = form.data["name"],
                 category_id = id,
+                description = form.data["description"],
                 image_file = saved_path)
         db.session.add(new_item)
         db.session.commit()
