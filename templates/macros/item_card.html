@@ -9,7 +9,8 @@
 
 
 {% macro without_image(item) -%}
-      <div class="mdl-cell mdl-cell--4-col item-card without-image mdl-card mdl-shadow--2dp">
+      <div class="mdl-cell mdl-cell--4-col item-card without-image mdl-card mdl-shadow--2dp"
+           data-item-url="{{ item.url }}" >
         <div class="mdl-card__title" >
           <h4> {{ item.name }} </h4>
         </div>

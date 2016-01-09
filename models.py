@@ -11,3 +11,7 @@ class Item(db.Model):
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
     image_file = db.Column(db.String(128))
 
+    @property
+    def url(self):
+        return "/items/%s" % self.id
+
