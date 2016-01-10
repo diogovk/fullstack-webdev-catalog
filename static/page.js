@@ -25,7 +25,6 @@ function loadInPageContent(url, title) {
         $("#header-title").textContent = title + " - Catalog App";
         $(".page-content").innerHTML = body;
         componentHandler.upgradeDom();
-        console.log(body);
       });
 
 }
