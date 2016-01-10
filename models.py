@@ -13,5 +13,5 @@ class Item(db.Model):
 
     @property
     def url(self):
-        return "/items/%s" % self.id
+        return "/item/%s" % self.id
 
