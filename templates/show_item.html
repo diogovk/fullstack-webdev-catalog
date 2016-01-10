@@ -1,0 +1,30 @@
+<style>
+.item-description {
+  margin: 20px 20px 20px 20px;
+  padding: 12px;
+}
+.item-title {
+  margin: 20px 20px 20px 20px;
+  padding: 12px;
+}
+.item-image {
+  margin: 20px 20px 20px 20px;
+}
+</style>
+
+<h2 class="item-title">
+  {{ item.name }}
+</h2>
+<div class="mdl-card mdl-shadow--2dp item-description">
+  {% if item.description %}
+    {{ item.description }}
+  {% else %}
+    <i> No description provided </i>
+  {% endif %}
+</div>
+
+{% if item.image_file %}
+<div class="mdl-card mdl-shadow--2dp item-image">
+  <img src="{{item.image_file}}"/>
+</div>
+{% endif %}

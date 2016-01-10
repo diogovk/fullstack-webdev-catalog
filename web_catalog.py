@@ -56,6 +56,10 @@ def create_item(id):
         return "ok"
     return render_template('new_item.html', category_id = id, form=form)
 
+@app.route('/item/<int:id>')
+def show_item(id):
+    item = Item.query.filter_by(id = id).first()
+    return render_template('show_item.html', item = item)
 
 if __name__ == '__main__':
     app.debug = True
