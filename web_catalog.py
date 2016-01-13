@@ -56,10 +56,19 @@ def create_item(id):
         return "ok"
     return render_template('new_item.html', category_id = id, form=form)
 
-@app.route('/item/<int:id>')
+@app.route('/item/<int:id>', methods=['GET'])
 def show_item(id):
     item = Item.query.filter_by(id = id).first()
     return render_template('show_item.html', item = item)
+
+@app.route('/item/<int:id>', methods=['DELETE'])
+def delete_item(id):
+    item = Item.query.filter_by(id = id).first()
+    if item:
+        db.session.delete(item)
+        db.session.commit()
+        return "ok"
+    return "Not Found", 404
 
 if __name__ == '__main__':
     app.debug = True
