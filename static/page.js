@@ -50,10 +50,10 @@ function loadLastCategory() {
   }
 }
 
-function postItem(id) {
-  fetch('/category/'+id+'/items/create', {
+function postItem(url, http_method) {
+  fetch(url, {
     credentials: 'same-origin', //send cookies
-    method: 'post',
+    method: http_method,
     body: new FormData($("form"))
   }).then(function(response) {
     return response.text();

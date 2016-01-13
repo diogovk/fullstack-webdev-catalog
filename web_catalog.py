@@ -70,6 +70,31 @@ def delete_item(id):
         return "ok"
     return "Not Found", 404
 
+@app.route('/item/<int:id>/edit')
+def edit_item(id):
+    item = Item.query.filter_by(id = id).first()
+    if item:
+        form = NewItemForm(obj=item)
+        return render_template('edit_item.html', form=form, item = item)
+    return "Not Found", 404
+
+@app.route('/item/<int:id>', methods=['PUT'])
+def update_item(id):
+    item = Item.query.filter_by(id = id).first()
+    if not item:
+        return "Not Found", 404
+    form = NewItemForm(obj=item)
+    if form.validate_on_submit():
+        file = request.files[form.image_file.name]
+        saved_path = save_image(file)
+        if saved_path:
+            item.image_file = saved_path
+        item.name = form.data["name"]
+        item.description = form.data["description"]
+        db.session.commit()
+        return "ok"
+    return render_template('edit_item.html', form=form, item = item)
+
 if __name__ == '__main__':
     app.debug = True
     app.run(host='0.0.0.0')
