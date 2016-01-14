@@ -38,7 +38,8 @@ def list_items(id):
 @app.route('/category/<int:id>/items/new')
 def new_item(id):
     form = NewItemForm()
-    return render_template('new_item.html', category_id = id, form=form)
+    action = "/category/%s/items" % id
+    return render_template('edit_item.html', form = form, action = action)
 
 
 @app.route('/category/<int:id>/items', methods=['POST'])
@@ -54,12 +55,15 @@ def create_item(id):
         db.session.add(new_item)
         db.session.commit()
         return "ok"
-    return render_template('new_item.html', category_id = id, form=form)
+    action = "/category/%s/items" % id
+    return render_template('edit_item.html', form = form, action = action)
+
 
 @app.route('/item/<int:id>', methods=['GET'])
 def show_item(id):
     item = Item.query.filter_by(id = id).first()
     return render_template('show_item.html', item = item)
+
 
 @app.route('/item/<int:id>', methods=['DELETE'])
 def delete_item(id):
@@ -70,13 +74,16 @@ def delete_item(id):
         return "ok"
     return "Not Found", 404
 
+
 @app.route('/item/<int:id>/edit')
 def edit_item(id):
     item = Item.query.filter_by(id = id).first()
     if item:
         form = NewItemForm(obj=item)
-        return render_template('edit_item.html', form=form, item = item)
+        action = "/item/%s" % item.id
+        return render_template('edit_item.html', form = form, action = action)
     return "Not Found", 404
+
 
 @app.route('/item/<int:id>', methods=['PUT', 'POST'])
 def update_item(id):
@@ -93,7 +100,9 @@ def update_item(id):
         item.description = form.data["description"]
         db.session.commit()
         return "ok"
-    return render_template('edit_item.html', form=form, item = item)
+    action = "/item/%s" % item.id
+    return render_template('edit_item.html', form = form, action = action)
+
 
 if __name__ == '__main__':
     app.debug = True

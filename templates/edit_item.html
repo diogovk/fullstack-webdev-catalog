@@ -3,7 +3,7 @@
     visibility: visible;
   }
 </style>
-<form action="/item/{{ item.id }}" method="post" accept-charset="utf-8" enctype=multipart/form-data>
+<form action="{{ action }}" method="post" accept-charset="utf-8" enctype=multipart/form-data>
   {{ form.csrf_token }}
   <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
     {{ form.name(class_="mdl-textfield__input") }}
@@ -28,7 +28,7 @@
   <button onclick="cancelNewItem()" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
     Cancel
   </button>
-  <button onclick="postItem('/item/{{ item.id }}')" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button-accent">
+  <button onclick="postItem('{{ action }}')" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button-accent">
     Save
   </button>
 </form>
