@@ -41,7 +41,7 @@ def new_item(id):
     return render_template('new_item.html', category_id = id, form=form)
 
 
-@app.route('/category/<int:id>/items/create', methods=['POST'])
+@app.route('/category/<int:id>/items', methods=['POST'])
 def create_item(id):
     form = NewItemForm()
     if form.validate_on_submit():
