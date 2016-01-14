@@ -78,7 +78,7 @@ def edit_item(id):
         return render_template('edit_item.html', form=form, item = item)
     return "Not Found", 404
 
-@app.route('/item/<int:id>', methods=['PUT'])
+@app.route('/item/<int:id>', methods=['PUT', 'POST'])
 def update_item(id):
     item = Item.query.filter_by(id = id).first()
     if not item:

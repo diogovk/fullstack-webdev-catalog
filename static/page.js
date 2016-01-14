@@ -54,10 +54,10 @@ function loadLastCategory() {
   }
 }
 
-function postItem(url, http_method) {
+function postItem(url) {
   fetch(url, {
     credentials: 'same-origin', //send cookies
-    method: http_method,
+    method: 'post',
     body: new FormData($("form"))
   }).then(function(response) {
     return response.text();
