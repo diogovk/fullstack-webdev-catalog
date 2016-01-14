@@ -40,6 +40,10 @@ function createNewItem(id) {
     loadInPageContent('/category/'+id+'/items/new', 'Adding New Item');
 }
 
+function editItem(id) {
+    loadInPageContent('/item/'+id+'/edit', 'Editing Item');
+}
+
 function cancelNewItem() {
   loadLastCategory();
 }

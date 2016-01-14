@@ -1,8 +1,16 @@
 <style>
-.item-description {
-  margin: 20px 20px 20px 20px;
-  padding: 12px;
+img.perfect-fit {
+  width: auto;
+  height: auto;
+  min-width: 100%;
+  min-height: 100%;
 }
+.item-description {
+  padding-left: 10px;
+  padding-right: 10px;
+  margin: 5px 5px 5px 5px;
+}
+/*
 .item-title {
   margin: 20px 20px 20px 20px;
   padding: 12px;
@@ -10,21 +18,39 @@
 .item-image {
   margin: 20px 20px 20px 20px;
 }
+.mdl-cell {
+  background: #eee;
+} */
+
+.button-cell {
+  padding-top: 16px;
+}
 </style>
 
-<h2 class="item-title">
-  {{ item.name }}
-</h2>
-<div class="mdl-card mdl-shadow--2dp item-description">
-  {% if item.description %}
-    {{ item.description }}
-  {% else %}
-    <i> No description provided </i>
+<div class="mdl-grid">
+  <div class="mdl-cell mdl-cell--2-col button-cell">
+    <button onclick="editItem({{item.id}})" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect action-button">
+      <i class="material-icons">edit</i>
+    </button>
+    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect action-button">
+      <i class="material-icons">delete</i>
+    </button>
+  </div>
+  <div class="mdl-cell mdl-cell--6-col">
+    <h2 class="item-title">
+      {{ item.name }}
+    </h2>
+  </div>
+  <div class="mdl-card mdl-cell--12-col mdl-shadow--2dp item-description">
+    {% if item.description %}
+      <h4>{{ item.description }} </h4>
+    {% else %}
+      <i> No description provided </i>
+    {% endif %}
+  </div>
+  {% if item.image_file %}
+  <div class="mdl-card mdl-cell--12-col mdl-shadow--2dp item-image">
+    <img class="perfect-fit" src="{{item.image_file}}"/>
+  </div>
   {% endif %}
 </div>
-
-{% if item.image_file %}
-<div class="mdl-card mdl-shadow--2dp item-image">
-  <img src="{{item.image_file}}"/>
-</div>
-{% endif %}
