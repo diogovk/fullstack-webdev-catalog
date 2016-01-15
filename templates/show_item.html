@@ -29,12 +29,15 @@ img.perfect-fit {
 
 <div class="mdl-grid">
   <div class="mdl-cell mdl-cell--2-col button-cell">
-    <button onclick="editItem({{item.id}})" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect action-button">
+    <button onclick="editItem({{ item.id }})" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect action-button">
       <i class="material-icons">edit</i>
     </button>
-    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect action-button">
+    <button onclick="deleteItem('{{ item.url }}')" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect action-button">
       <i class="material-icons">delete</i>
     </button>
+    <form action="{{ item.url }}" method="delete" accept-charset="utf-8" enctype=multipart/form-data>
+      {{ csrf_form.csrf_token }}
+    </form>
   </div>
   <div class="mdl-cell mdl-cell--6-col">
     <h2 class="item-title">
@@ -50,7 +53,7 @@ img.perfect-fit {
   </div>
   {% if item.image_file %}
   <div class="mdl-card mdl-cell--12-col mdl-shadow--2dp item-image">
-    <img class="perfect-fit" src="{{item.image_file}}"/>
+    <img class="perfect-fit" src="{{ item.image_file }}"/>
   </div>
   {% endif %}
 </div>

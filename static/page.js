@@ -70,3 +70,24 @@ function postItem(url) {
     }
   });
 }
+
+
+function deleteItem(url) {
+  if (! confirm("Are you sure you want to delete this item?")){
+      return;
+  }
+  fetch(url, {
+    credentials: 'same-origin', //send cookies
+    method: 'delete',
+    body: new FormData($("form"))
+  }).then(function(response) {
+    return response.text();
+  }).then(function(body) {
+    if ( body == 'ok'){
+      loadLastCategory();
+    } else {
+      alert(body);
+      componentHandler.upgradeDom();
+    }
+  });
+}

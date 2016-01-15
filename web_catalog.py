@@ -1,5 +1,6 @@
 #!/usr/bin/python2
 
+from flask_wtf import Form
 from flask import request, render_template, redirect
 from oauth2client import client, crypt
 from app import app, db
@@ -62,7 +63,8 @@ def create_item(id):
 @app.route('/item/<int:id>', methods=['GET'])
 def show_item(id):
     item = Item.query.filter_by(id = id).first()
-    return render_template('show_item.html', item = item)
+    csrf_form = Form()
+    return render_template('show_item.html', item = item, csrf_form = csrf_form)
 
 
 @app.route('/item/<int:id>', methods=['DELETE'])
