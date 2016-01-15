@@ -1,7 +1,22 @@
 
 "use strict";
 var $ = document.querySelector.bind(document);
-var currentSelectedCategory = null;
+
+var UserNavigation = {
+    /* Keeps track of user navigation, allowing the user to "go back".
+     * This is done, by loading the second latest URL accessed by the user */
+    lastURL:  null,
+    penultimateURL: null,
+    access: function(url, title) {
+        this.penultimateURL = this.lastURL;
+        this.lastURL = { url: url, title: title };
+    },
+    goBack: function() {
+        if (this.penultimateURL) {
+            loadInPageContent(this.penultimateURL.url, this.penultimateURL.title);
+        }
+    }
+};
 
 function onSignIn(googleUser) {
     var profile = googleUser.getBasicProfile();
@@ -22,6 +37,7 @@ function loadInPageContent(url, title) {
       }).then(function(response) {
         return response.text();
       }).then(function(body) {
+        UserNavigation.access(url, title);
         $("#header-title").textContent = title + " - Catalog App";
         $(".page-content").innerHTML = body;
         componentHandler.upgradeDom();
@@ -32,27 +48,17 @@ function loadInPageContent(url, title) {
 /* updates title, and loads category content page */
 function selectCategory(name, id) {
     loadInPageContent('/category/'+id+'/items', name);
-    // used for "going back"
-    currentSelectedCategory = { id: id, name: name };
 }
 
 function createNewItem(id) {
     loadInPageContent('/category/'+id+'/items/new', 'Adding New Item');
 }
 
+
 function editItem(id) {
     loadInPageContent('/item/'+id+'/edit', 'Editing Item');
 }
 
-function cancelNewItem() {
-  loadLastCategory();
-}
-
-function loadLastCategory() {
-  if (currentSelectedCategory) {
-    selectCategory(currentSelectedCategory.name, currentSelectedCategory.id);
-  }
-}
 
 function postItem(url) {
   fetch(url, {
@@ -63,7 +69,7 @@ function postItem(url) {
     return response.text();
   }).then(function(body) {
     if ( body == 'ok'){
-      loadLastCategory();
+      UserNavigation.goBack();
     } else {
       $(".page-content").innerHTML = body;
       componentHandler.upgradeDom();
@@ -84,7 +90,7 @@ function deleteItem(url) {
     return response.text();
   }).then(function(body) {
     if ( body == 'ok'){
-      loadLastCategory();
+      UserNavigation.goBack();
     } else {
       alert(body);
       componentHandler.upgradeDom();
