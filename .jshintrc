@@ -1,0 +1,10 @@
+{
+    "globals"   : {
+        "confirm"      : false,
+        "componentHandler"      : false,
+        "alert"  : false,
+        "console": false
+    },
+    "globalstrict": true,
+    "browser": true
+}
