@@ -82,8 +82,7 @@ def edit_item(id):
     item = Item.query.filter_by(id = id).first()
     if item:
         form = NewItemForm(obj=item)
-        action = "/item/%s" % item.id
-        return render_template('edit_item.html', form = form, action = action)
+        return render_template('edit_item.html', form = form, action = item.url)
     return "Not Found", 404
 
 
@@ -102,8 +101,7 @@ def update_item(id):
         item.description = form.data["description"]
         db.session.commit()
         return "ok"
-    action = "/item/%s" % item.id
-    return render_template('edit_item.html', form = form, action = action)
+    return render_template('edit_item.html', form = form, action = item.url)
 
 
 if __name__ == '__main__':
