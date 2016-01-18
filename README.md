@@ -8,6 +8,16 @@ python2-psycopg2
 Flask-Migrate
 ```
 
+## WebApp credentials with Google
+
+For google oauth login, it is nececessary to have a credential with google.
+To do that, you'll have to create a project in https://console.developers.google.com/project (if you don't have already).
+And then, create credentials in https://console.developers.google.com/apis/credentials?project=<YOUR_PROJECT>.
+Then, in the same page, download the JSON file with your credentials.
+Save the downloaded file in client_secret_webcatalog.json at the webapp root directory (which contains this README).
+Remember the credentials in your JSON file are secret, and should NOT be commited in a public project!
+This project comes with a sample google credential, which shouldn't be used in production.
+
 ## Initilizing database
 
 ```
