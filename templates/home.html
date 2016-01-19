@@ -17,13 +17,44 @@
     <script src="https://storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js"></script>
 
     <script type="text/javascript" charset="utf-8" src="{{ url_for('static', filename='page.js') }}"> </script>
+    <style>
+      .login_panel {
+        position: fixed;
+        right: 0;
+        width: 200px;
+        padding: 10px;
+        background-color: white;
+        top: 60px;
+        z-index: 2;
+      }
+    </style>
   </head>
   <body>
+    <div id="login_panel" class="login_panel" style="display: none;">
+        <div style="display: inline-block;">
+          <span style="padding-botton: 30px;"> Login with google:</span>
+          <span class="g-signin"
+                data-scope="openid email"
+                data-clientid="{{flow.client_id}}"
+                data-redirecturi="{{flow.redirect_uri}}"
+                data-accesstype="offline"
+                data-cookiepolicy="single_host_origin"
+                data-callback="signInCallback"
+                data-approvalprompt="force">
+          </span>
+        </div>
+        <hr>
+        <div style="margin: 5px;"> Login with Facebook:</div>
+    </div>
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
       <header class="mdl-layout__header">
         <div class="mdl-layout__header-row">
           <div class="mdl-layout-spacer"></div>
           <span id="header-title" class=mdl-layout-title>Catalog App</span>
+          <button style="margin: 10px; color: white; background-color: #EF6C00;" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect "
+              onclick="toggleShowLoginPanel()">
+              <strong>Log in</strong>
+          </button>
         </div>
       </header>
       <div class="mdl-layout__drawer">
@@ -36,7 +67,6 @@
       </div>
       <main class="mdl-layout__content">
         <div class="page-content">
-          <div class="g-signin2" data-onsuccess="onSignIn"></div>
           Select a category to begin.
         </div>
       </main>

@@ -1,9 +1,9 @@
 #!/usr/bin/python2
 
 from flask_wtf import Form
-from flask import request, render_template, redirect
+from flask import request, render_template, redirect, session
 from oauth2client import client, crypt
-from app import app, db
+from app import app, db, flow
 from forms import NewItemForm
 from flask_wtf.csrf import CsrfProtect
 from models import Item
@@ -16,7 +16,10 @@ MY_CLIENT_ID='969890289717-96158do2n0gntojond0bnrmor86gdriu.apps.googleuserconte
 @app.route('/')
 def home():
     categories = Category.query.all()
-    return render_template('home.html', categories=categories)
+    return render_template('home.html',
+            categories=categories,
+            flow=flow,
+            csrf_form = Form())
 
 
 @app.route('/oauth_check', methods=['POST'])
@@ -102,7 +105,6 @@ def update_item(id):
         db.session.commit()
         return "ok"
     return render_template('edit_item.html', form = form, action = item.url)
-
 
 if __name__ == '__main__':
     app.debug = True

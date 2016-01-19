@@ -4,7 +4,7 @@
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CsrfProtect
-
+from oauth2client.client import flow_from_clientsecrets
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres:///webcatalog'
@@ -18,5 +18,8 @@ app.config['WTF_CSRF_METHODS'] = ['POST', 'PUT', 'PATCH', 'DELETE']
 
 db = SQLAlchemy(app)
 
+flow = flow_from_clientsecrets('client_secret_webcatalog.json',
+                               scope='openid email',
+                               redirect_uri='postmessage')
 
 CsrfProtect(app)

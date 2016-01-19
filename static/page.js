@@ -97,3 +97,9 @@ function deleteItem(url) {
     }
   });
 }
+
+function toggleShowLoginPanel() {
+  var login_panel = $("#login_panel");
+  var display = login_panel.style.display == "block" ? "none" : "block";
+  login_panel.style.display = display;
+}
