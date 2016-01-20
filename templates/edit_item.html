@@ -3,7 +3,7 @@
     visibility: visible;
   }
 </style>
-<form action="{{ action }}" method="post" accept-charset="utf-8" enctype=multipart/form-data>
+<form id="item_edit_form" action="{{ action }}" method="post" accept-charset="utf-8" enctype=multipart/form-data>
   {{ form.csrf_token }}
   <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
     {{ form.name(class_="mdl-textfield__input") }}

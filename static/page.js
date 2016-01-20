@@ -53,7 +53,7 @@ function postItem(url) {
   fetch(url, {
     credentials: 'same-origin', //send cookies
     method: 'post',
-    body: new FormData($("form"))
+    body: new FormData($("#item_edit_form"))
   }).then(function(response) {
     return response.text();
   }).then(function(body) {
@@ -74,7 +74,7 @@ function deleteItem(url) {
   fetch(url, {
     credentials: 'same-origin', //send cookies
     method: 'delete',
-    body: new FormData($("form"))
+    body: new FormData($("#csrf_form"))
   }).then(function(response) {
     return response.text();
   }).then(function(body) {
@@ -96,7 +96,7 @@ function toggleShowLoginPanel() {
 function googleLoginCallback(authResult) {
   if (authResult.code){
     $("#googleSignInButton").style.display = "none";
-    var data =new FormData($("form"));
+    var data =new FormData($("#csrf_form"));
     data.append('token', authResult.code);
     console.log(authResult.code);
     fetch("/gconnect", {

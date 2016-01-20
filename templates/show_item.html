@@ -33,7 +33,7 @@ img.perfect-fit {
     <button onclick="deleteItem('{{ item.url }}')" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect action-button">
       <i class="material-icons">delete</i>
     </button>
-    <form action="{{ item.url }}" method="delete" accept-charset="utf-8" enctype=multipart/form-data>
+    <form id="csrf_form" action="{{ item.url }}" method="delete" accept-charset="utf-8" enctype=multipart/form-data>
       {{ csrf_form.csrf_token }}
     </form>
   </div>
