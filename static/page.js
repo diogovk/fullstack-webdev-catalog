@@ -1,7 +1,6 @@
 
 "use strict";
 var $ = document.querySelector.bind(document);
-
 var UserNavigation = {
     /* Keeps track of user navigation, allowing the user to "go back".
      * This is done, by loading the second latest URL accessed by the user */
@@ -18,18 +17,6 @@ var UserNavigation = {
     }
 };
 
-function onSignIn(googleUser) {
-    var profile = googleUser.getBasicProfile();
-    var id_token = googleUser.getAuthResponse().id_token;
-    console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-    //request.post('/oauth_check')
-    //    .send({ token: id_token })
-    //    .end(function(err, res){
-    //        if (res.text == "ok") {
-    //            alert("Logged in successfuly");
-    //        }
-    //    });
-}
 
 function loadInPageContent(url, title) {
     fetch(url, {
@@ -45,10 +32,12 @@ function loadInPageContent(url, title) {
 
 }
 
+
 /* updates title, and loads category content page */
 function selectCategory(name, id) {
     loadInPageContent('/category/'+id+'/items', name);
 }
+
 
 function createNewItem(id) {
     loadInPageContent('/category/'+id+'/items/new', 'Adding New Item');
@@ -102,4 +91,25 @@ function toggleShowLoginPanel() {
   var login_panel = $("#login_panel");
   var display = login_panel.style.display == "block" ? "none" : "block";
   login_panel.style.display = display;
+}
+
+function googleLoginCallback(authResult) {
+  if (authResult.code){
+    $("#googleSignInButton").style.display = "none";
+    var data =new FormData($("form"));
+    data.append('token', authResult.code);
+    console.log(authResult.code);
+    fetch("/gconnect", {
+      credentials: 'same-origin',
+      method: 'post',
+      body: data
+    }).then(function(response) {
+      return response.text();
+    }).then(function(body) {
+        if (body == "ok") {
+          console.log("Login successful. Redirecting.");
+//          window.location.href="/";
+        }
+    });
+  }
 }

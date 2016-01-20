@@ -22,14 +22,10 @@ def home():
             csrf_form = Form())
 
 
-@app.route('/oauth_check', methods=['POST'])
-def oauth_check():
-    token = request.get_json()['token']
-    idinfo = client.verify_id_token(token, MY_CLIENT_ID)
-    if idinfo['aud'] != MY_CLIENT_ID:
-        return ('Wrong "client id"', 403)
-    if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
-        return ('Wrong issuer', 403)
+@app.route('/gconnect', methods=['POST'])
+def gconnect():
+    token = request.form["token"]
+    credentials_obj = flow.step2_exchange(token)
     return ('ok', 200)
 
 
@@ -105,6 +101,7 @@ def update_item(id):
         db.session.commit()
         return "ok"
     return render_template('edit_item.html', form = form, action = item.url)
+
 
 if __name__ == '__main__':
     app.debug = True

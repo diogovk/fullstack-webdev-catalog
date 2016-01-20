@@ -30,16 +30,19 @@
     </style>
   </head>
   <body>
+    <form action="#" method="post" enctype=multipart/form-data>
+      {{ csrf_form.csrf_token }}
+    </form>
     <div id="login_panel" class="login_panel" style="display: none;">
-        <div style="display: inline-block;">
-          <span style="padding-botton: 30px;"> Login with google:</span>
+        <span style="padding-botton: 30px;"> Login with google:</span>
+        <div id="googleSignInButton">
           <span class="g-signin"
                 data-scope="openid email"
                 data-clientid="{{flow.client_id}}"
                 data-redirecturi="{{flow.redirect_uri}}"
                 data-accesstype="offline"
                 data-cookiepolicy="single_host_origin"
-                data-callback="signInCallback"
+                data-callback="googleLoginCallback"
                 data-approvalprompt="force">
           </span>
         </div>
