@@ -1,7 +1,7 @@
 #!/usr/bin/python2
 
 from flask_wtf import Form
-from flask import request, render_template, redirect, session
+from flask import request, render_template, redirect, session, url_for
 from oauth2client import client, crypt
 from app import app, db, flow
 from forms import NewItemForm
@@ -21,6 +21,16 @@ def home():
                            flow=flow,
                            username=session.get('username'),
                            csrf_form=Form())
+
+@app.route('/disconnect')
+def disconnect():
+    if 'provider' in session:
+        del session['credentials']
+        del session['gplus_id']
+        del session['username']
+        del session['email']
+        del session['provider']
+    return redirect(url_for('home'))
 
 
 @app.route('/gconnect', methods=['POST'])
