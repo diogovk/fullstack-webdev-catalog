@@ -98,7 +98,6 @@ function googleLoginCallback(authResult) {
     $("#googleSignInButton").style.display = "none";
     var data =new FormData($("#csrf_form"));
     data.append('token', authResult.code);
-    console.log(authResult.code);
     fetch("/gconnect", {
       credentials: 'same-origin',
       method: 'post',
@@ -108,7 +107,7 @@ function googleLoginCallback(authResult) {
     }).then(function(body) {
         if (body == "ok") {
           console.log("Login successful. Redirecting.");
-//          window.location.href="/";
+          window.location.href="/";
         }
     });
   }

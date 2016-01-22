@@ -54,10 +54,17 @@
         <div class="mdl-layout__header-row">
           <div class="mdl-layout-spacer"></div>
           <span id="header-title" class=mdl-layout-title>Catalog App</span>
-          <button style="margin: 10px; color: white; background-color: #EF6C00;" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect "
-              onclick="toggleShowLoginPanel()">
-              <strong>Log in</strong>
-          </button>
+          {% if not username %}
+            <button style="margin: 10px; color: white; background-color: #EF6C00;" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect "
+                onclick="toggleShowLoginPanel()">
+                <strong>Log in</strong>
+            </button>
+          {% else %}
+            <button style="margin: 10px; color: white; background-color: #EF6C00;" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect "
+                onclick="logout()">
+                <strong>Log out</strong>
+            </button>
+          {% endif %}
         </div>
       </header>
       <div class="mdl-layout__drawer">
