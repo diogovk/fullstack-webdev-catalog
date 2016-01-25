@@ -13,6 +13,9 @@ class NewItemForm(Form):
     image_file = FileField('Image', [])
 
     def validate_image_file(form, field):
+        # This field is optional, so empty is considered valid
+        if not field.data:
+            return
         extension = get_image_extension(field.data.filename)
         if extension and extension not in app.config['ALLOWED_IMG_EXTENSIONS']:
             raise validators.ValidationError(

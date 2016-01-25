@@ -53,3 +53,5 @@ http://flask.pocoo.org/docs/0.10/api/
 http://stackoverflow.com/questions/20646822/how-to-serve-static-files-in-flask
 https://flask-migrate.readthedocs.org/en/latest/
 http://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-iii-web-forms
+http://stackoverflow.com/questions/7428124/how-can-i-fake-request-post-and-get-params-for-unit-testing-in-flask
+http://stackoverflow.com/questions/8552675/form-sending-error-flask

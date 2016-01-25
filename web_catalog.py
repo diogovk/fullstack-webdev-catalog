@@ -97,8 +97,8 @@ def new_item(id):
 def create_item(id):
     form = NewItemForm()
     if form.validate_on_submit():
-        file = request.files[form.image_file.name]
-        saved_path = save_image(file)
+        file = request.files.get(form.image_file.name)
+        saved_path = save_image(file) if file else None
         new_item = Item(name=form.data["name"],
                         category_id=id,
                         description=form.data["description"],

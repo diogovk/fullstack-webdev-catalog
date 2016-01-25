@@ -1,5 +1,19 @@
 import web_catalog
 import unittest
+from app import db
+from models import Item, Category
+from bs4 import BeautifulSoup
+
+
+def get_existing_category_id():
+    return Category.query.first().id
+
+
+def get_crsf_token(page):
+    soup = BeautifulSoup(page, "html.parser")
+    crsf_input = soup.find("input", id="csrf_token")
+    return crsf_input.get('value')
+
 
 class WebCatalogCase(unittest.TestCase):
 
@@ -16,6 +30,7 @@ class WebCatalogCase(unittest.TestCase):
             sess['email'] = 'johndoe@example.com'
             sess['provider'] = 'google'
 
+
     def test_login_button(self):
         rv = self.app.get("/")
         assert 'Login' in rv.data
@@ -27,6 +42,17 @@ class WebCatalogCase(unittest.TestCase):
         rv = self.app.get("/disconnect", follow_redirects=True)
         assert 'Login' in rv.data
         assert 'Logout' not in rv.data
+
+
+    def test_new_item(self):
+        item_count = db.session.query(Item.id).count()
+        category_id = get_existing_category_id()
+        rv = self.app.get("/category/%s/items/new" % category_id)
+        csrf_token = get_crsf_token(rv.data)
+        create_item_url = "/category/%s/items" % category_id
+        rv = self.app.post(create_item_url, data=dict(name="Thingy", description="A Thingy thing", csrf_token=csrf_token))
+        new_item_count = db.session.query(Item.id).count()
+        assert (item_count+1) == new_item_count
 
 if __name__ == '__main__':
     unittest.main()
