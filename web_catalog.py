@@ -143,8 +143,8 @@ def update_item(id):
         return "Not Found", 404
     form = NewItemForm(obj=item)
     if form.validate_on_submit():
-        file = request.files[form.image_file.name]
-        saved_path = save_image(file)
+        file = request.files.get(form.image_file.name)
+        saved_path = save_image(file) if file else None
         if saved_path:
             item.image_file = saved_path
         item.name = form.data["name"]
