@@ -1,7 +1,7 @@
 
 "use strict";
 var $ = document.querySelector.bind(document);
-var UserNavigation = {
+var Navigation = {
     /* Keeps track of user navigation, allowing the user to "go back".
      * This is done, by loading the second latest URL accessed by the user */
     lastURL:  null,
@@ -9,43 +9,44 @@ var UserNavigation = {
     access: function(url, title) {
         this.penultimateURL = this.lastURL;
         this.lastURL = { url: url, title: title };
+        this.loadInPageContent(url, title);
     },
     goBack: function() {
         if (this.penultimateURL) {
-            loadInPageContent(this.penultimateURL.url, this.penultimateURL.title);
+            this.access(this.penultimateURL.url, this.penultimateURL.title);
         }
+    },
+    loadInPageContent: function(url, title) {
+        fetch(url, {
+          credentials: 'same-origin', //send cookies
+          }).then(function(response) {
+            return response.text();
+          }).then(function(body) {
+            $("#header-title").textContent = title + " - Catalog App";
+            $(".page-content").innerHTML = body;
+            $(".mdl-layout__content").scrollTop = 0;
+            componentHandler.upgradeDom();
+          });
+
     }
 };
 
 
-function loadInPageContent(url, title) {
-    fetch(url, {
-      credentials: 'same-origin', //send cookies
-      }).then(function(response) {
-        return response.text();
-      }).then(function(body) {
-        UserNavigation.access(url, title);
-        $("#header-title").textContent = title + " - Catalog App";
-        $(".page-content").innerHTML = body;
-        componentHandler.upgradeDom();
-      });
-
-}
 
 
 /* updates title, and loads category content page */
 function selectCategory(name, id) {
-    loadInPageContent('/category/'+id+'/items', name);
+    Navigation.access('/category/'+id+'/items', name);
 }
 
 
 function createNewItem(id) {
-    loadInPageContent('/category/'+id+'/items/new', 'Adding New Item');
+    Navigation.access('/category/'+id+'/items/new', 'Adding New Item');
 }
 
 
 function editItem(id) {
-    loadInPageContent('/item/'+id+'/edit', 'Editing Item');
+    Navigation.access('/item/'+id+'/edit', 'Editing Item');
 }
 
 
@@ -58,7 +59,7 @@ function postItem(url) {
     return response.text();
   }).then(function(body) {
     if ( body == 'ok'){
-      UserNavigation.goBack();
+      Navigation.goBack();
     } else {
       $(".page-content").innerHTML = body;
       componentHandler.upgradeDom();
@@ -79,7 +80,7 @@ function deleteItem(url) {
     return response.text();
   }).then(function(body) {
     if ( body == 'ok'){
-      UserNavigation.goBack();
+      Navigation.goBack();
     } else {
       alert(body);
       componentHandler.upgradeDom();
