@@ -47,12 +47,18 @@ class WebCatalogCase(unittest.TestCase):
     def test_new_item(self):
         item_count = db.session.query(Item.id).count()
         category_id = get_existing_category_id()
+        create_item_url = "/category/%s/items" % category_id
+        # should reject if post if doesn't have crsf_token
+        rv = self.app.post(create_item_url, data=dict(name="Thingy", description="A Thingy thing"))
+        assert rv.status_code == 400
+        current_item_count = db.session.query(Item.id).count()
+        assert item_count == current_item_count #no increase
+        # should accept and add to the DB if crsf_token is correct
         rv = self.app.get("/category/%s/items/new" % category_id)
         csrf_token = get_crsf_token(rv.data)
-        create_item_url = "/category/%s/items" % category_id
         rv = self.app.post(create_item_url, data=dict(name="Thingy", description="A Thingy thing", csrf_token=csrf_token))
-        new_item_count = db.session.query(Item.id).count()
-        assert (item_count+1) == new_item_count
+        current_item_count = db.session.query(Item.id).count()
+        assert (item_count+1) == current_item_count
 
 if __name__ == '__main__':
     unittest.main()
