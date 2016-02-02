@@ -1,7 +1,7 @@
 from app import db
 from models import Category, Item
 
-seed_data={
+seed_data = {
         "Soccer": ["Ball", "Gloves", "Red Card"],
         "Basketball": ["Ball", "Sneakers", "Hoop"],
         "Skating": ["Ice Skates", "Roller Skates"],
@@ -13,12 +13,10 @@ seed_data={
         }
 
 for category_name, items in seed_data.items():
-    category = Category(name = category_name)
+    category = Category(name=category_name)
     db.session.add(category)
     db.session.commit()
     for item_name in items:
-        item = Item(name = item_name, category_id = category.id)
+        item = Item(name=item_name, category_id=category.id)
         db.session.add(item)
         db.session.commit()
-
-

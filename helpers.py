@@ -2,10 +2,13 @@ from hashlib import md5
 from app import app
 import os
 
+
 def get_image_extension(filename):
-    """ Returns the file extension if the extension is allowed, otherwise None """
+    """
+    Returns the file extension if the extension is allowed, otherwise None
+    """
     if '.' in filename:
-        extension=filename.rsplit('.', 1)[1]
+        extension = filename.rsplit('.', 1)[1]
         if extension:
             return extension
     return None

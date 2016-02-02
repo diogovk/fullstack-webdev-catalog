@@ -22,6 +22,7 @@ def home():
                            username=session.get('username'),
                            csrf_form=Form())
 
+
 @app.route('/disconnect')
 def disconnect():
     if 'provider' in session:

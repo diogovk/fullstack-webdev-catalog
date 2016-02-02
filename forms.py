@@ -4,6 +4,7 @@ from wtforms import TextField, FileField, HiddenField, validators
 from helpers import get_image_extension
 from flask import request
 
+
 class NewItemForm(Form):
     name = TextField('Title', [
         validators.Length(min=3, max=128),
@@ -24,4 +25,3 @@ class NewItemForm(Form):
         if field.data.filename and not request.files[form.image_file.name]:
             raise validators.ValidationError(
                     "Couln't find the file in form submission")
-
