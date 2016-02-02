@@ -68,7 +68,7 @@ function postItem(url) {
 }
 
 
-function deleteItem(url) {
+function deleteItem(url, afterDeleteURL) {
   if (! confirm("Are you sure you want to delete this item?")){
       return;
   }
@@ -80,10 +80,9 @@ function deleteItem(url) {
     return response.text();
   }).then(function(body) {
     if ( body == 'ok'){
-      Navigation.goBack();
+      Navigation.access(afterDeleteURL);
     } else {
       alert(body);
-      componentHandler.upgradeDom();
     }
   });
 }

@@ -30,7 +30,7 @@ img.perfect-fit {
     <button onclick="editItem({{ item.id }})" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect action-button">
       <i class="material-icons">edit</i>
     </button>
-    <button onclick="deleteItem('{{ item.url }}')" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect action-button">
+    <button onclick="deleteItem('{{ item.url }}', '{{ url_for('list_items', id=item.category_id) }}')" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect action-button">
       <i class="material-icons">delete</i>
     </button>
     <form id="csrf_form" action="{{ item.url }}" method="delete" accept-charset="utf-8" enctype=multipart/form-data>
