@@ -89,25 +89,24 @@ def list_items(id):
 @app.route('/category/<int:id>/items/new')
 def new_item(id):
     form = NewItemForm()
-    action = "/category/%s/items" % id
-    return render_template('edit_item.html', form=form, action=action)
+    form.category_id.data = id
+    return render_template('edit_item.html', form=form, action="/items")
 
 
-@app.route('/category/<int:id>/items', methods=['POST'])
-def create_item(id):
+@app.route('/items', methods=['POST'])
+def create_item():
     form = NewItemForm()
     if form.validate_on_submit():
         file = request.files.get(form.image_file.name)
         saved_path = save_image(file) if file else None
         new_item = Item(name=form.data["name"],
-                        category_id=id,
+                        category_id=form.data["category_id"],
                         description=form.data["description"],
                         image_file=saved_path)
         db.session.add(new_item)
         db.session.commit()
         return "ok"
-    action = "/category/%s/items" % id
-    return render_template('edit_item.html', form=form, action=action)
+    return render_template('edit_item.html', form=form, action="/items")
 
 
 @app.route('/item/<int:id>', methods=['GET'])

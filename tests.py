@@ -45,10 +45,10 @@ class WebCatalogCase(unittest.TestCase):
     def test_csrf_check(self):
         item_count = db.session.query(Item.id).count()
         category_id = get_existing_category_id()
-        create_item_url = "/category/%s/items" % category_id
         # should reject if post if doesn't have crsf_token
-        rv = self.app.post(create_item_url, data=dict(
-            name="Thingy", description="A Thingy thing"))
+        rv = self.app.post("/items", data=dict(
+            name="Thingy", description="A Thingy thing",
+            category_id=category_id))
         assert rv.status_code == 400
         current_item_count = db.session.query(Item.id).count()
         assert item_count == current_item_count  # no increase
@@ -56,15 +56,16 @@ class WebCatalogCase(unittest.TestCase):
     def test_new_item(self):
         item_count = db.session.query(Item.id).count()
         category_id = get_existing_category_id()
-        create_item_url = "/category/%s/items" % category_id
         # should accept and add to the DB if crsf_token is correct
         csrf_token = self.get_crsf_token_from_url(
                 "/category/%s/items/new" % category_id)
-        rv = self.app.post(create_item_url, data=dict(
+        rv = self.app.post("/items", data=dict(
             name="Thingy",
             description="A Thingy thing",
+            category_id=category_id,
             csrf_token=csrf_token))
         assert rv.status_code == 200
+        assert rv.data == "ok"
         current_item_count = db.session.query(Item.id).count()
         assert (item_count+1) == current_item_count
 
@@ -76,6 +77,7 @@ class WebCatalogCase(unittest.TestCase):
             description="A Thingy thing",
             csrf_token=csrf_token))
         assert rv.status_code == 200
+        assert rv.data == "ok"
         updated_item = db.session.query(Item).filter_by(id=item.id).first()
         assert updated_item.name == "Renamed Thingy"
 
