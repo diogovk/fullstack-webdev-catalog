@@ -7,8 +7,14 @@
     <!-- provides easy http requests -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/0.10.1/fetch.js"></script>
 
+    <script>
+window.___gcfg = {
+    lang: 'en-US',
+    parsetags: 'explicit'
+}
+    </script>
     <!-- Google Sign-in -->
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="https://apis.google.com/js/platform.js" ></script>
 
     <!-- Material desing light -->
     <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.6/material.blue-orange.min.css" />
@@ -34,7 +40,7 @@
       {{ csrf_form.csrf_token }}
     </form>
     {% if not username %}
-      <div id="login_panel" class="login_panel" style="display: none;">
+      <div id="login_panel" class="login_panel" hidden>
           <span style="padding-botton: 30px;"> Login with google:</span>
           <div id="googleSignInButton">
             <span class="g-signin"

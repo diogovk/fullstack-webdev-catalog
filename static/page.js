@@ -89,8 +89,8 @@ function deleteItem(url, afterDeleteURL) {
 
 function toggleShowLoginPanel() {
   var login_panel = $("#login_panel");
-  var display = login_panel.style.display == "block" ? "none" : "block";
-  login_panel.style.display = display;
+  login_panel.hidden = !login_panel.hidden;
+  gapi.signin.go(login_panel);
 }
 
 function googleLoginCallback(authResult) {

@@ -3,7 +3,8 @@
         "confirm"      : false,
         "componentHandler"      : false,
         "alert"  : false,
-        "console": false
+        "console": false,
+        "gapi": false
     },
     "globalstrict": true,
     "browser": true
