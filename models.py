@@ -33,5 +33,6 @@ class Item(db.Model):
         return {
                 "name": self.name,
                 "id": self.id,
-                "description": self.description
+                "description": self.description,
+                "image_file": self.image_file
                 }
