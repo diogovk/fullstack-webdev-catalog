@@ -1,7 +1,7 @@
 #!/usr/bin/python2
 
 from flask_wtf import Form
-from flask import request, render_template, redirect, session, url_for
+from flask import request, render_template, redirect, session, url_for, jsonify
 from oauth2client import client, crypt
 from app import app, db, flow
 from forms import NewItemForm
@@ -152,6 +152,13 @@ def update_item(id):
         db.session.commit()
         return "ok"
     return render_template('edit_item.html', form=form, action=item.url)
+
+
+@app.route('/catalog.json')
+def catalog_json():
+    categories = Category.query.all()
+    category_list = [category.serialize for category in categories]
+    return jsonify(categories=category_list)
 
 
 if __name__ == '__main__':

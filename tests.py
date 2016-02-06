@@ -3,6 +3,7 @@ import unittest
 from app import db
 from models import Item, Category
 from bs4 import BeautifulSoup
+import json
 
 
 def get_existing_category_id():
@@ -80,6 +81,13 @@ class WebCatalogCase(unittest.TestCase):
         assert rv.data == "ok"
         updated_item = db.session.query(Item).filter_by(id=item.id).first()
         assert updated_item.name == "Renamed Thingy"
+
+    def test_category_json(self):
+        rv = self.app.get("/catalog.json")
+        assert rv.status_code == 200
+        print rv.data
+        # Will raise exception if not valid JSON
+        json.loads(rv.data)
 
 
 if __name__ == '__main__':

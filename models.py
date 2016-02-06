@@ -1,9 +1,19 @@
 from app import db
+from sqlalchemy.orm import relationship
 
 
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), unique=True, nullable=False)
+    items = relationship("Item", backref="category")
+
+    @property
+    def serialize(self):
+        return {
+                "id": self.id,
+                "name": self.name,
+                "items": [item.serialize for item in self.items]
+                }
 
 
 class Item(db.Model):
@@ -17,3 +27,11 @@ class Item(db.Model):
     @property
     def url(self):
         return "/item/%s" % self.id
+
+    @property
+    def serialize(self):
+        return {
+                "name": self.name,
+                "id": self.id,
+                "description": self.description
+                }
