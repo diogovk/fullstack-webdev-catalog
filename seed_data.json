@@ -1,0 +1,134 @@
+{
+  "categories": [
+    {
+      "items": [
+        {
+          "description": "", 
+          "image_file": null, 
+          "name": "Ice Skates"
+        }, 
+        {
+          "description": "", 
+          "image_file": null, 
+          "name": "Roller Skates"
+        }
+      ], 
+      "name": "Skating"
+    }, 
+    {
+      "items": [
+        {
+          "description": "", 
+          "image_file": null, 
+          "name": "Sneakers"
+        }, 
+        {
+          "description": "Where the ball must pass through for scoring points.", 
+          "image_file": "./static/images/5fc29b6018abf0b2e8e28ed559da1ca6.jpg", 
+          "name": "Hoop"
+        }, 
+        {
+          "description": "the inflated ball used in the game of basketball", 
+          "image_file": "./static/images/7a41897ee288cc480f4e7c4f36ddc95d.jpg", 
+          "name": "Ball"
+        }
+      ], 
+      "name": "Basketball"
+    }, 
+    {
+      "items": [
+        {
+          "description": "Used to protect the cards from scratches and dust", 
+          "image_file": null, 
+          "name": "Sleeves"
+        }, 
+        {
+          "description": "", 
+          "image_file": null, 
+          "name": "Playmat"
+        }
+      ], 
+      "name": "Magic"
+    }, 
+    {
+      "items": [
+        {
+          "description": "", 
+          "image_file": null, 
+          "name": "Ball"
+        }, 
+        {
+          "description": "", 
+          "image_file": null, 
+          "name": "Goal"
+        }
+      ], 
+      "name": "Handball"
+    }, 
+    {
+      "items": [
+        {
+          "description": "The card used for expulsion of a player.", 
+          "image_file": null, 
+          "name": "Red Card"
+        }, 
+        {
+          "description": "A football, soccer ball, or association football ball is the ball used in thesport of association football. The name of the ball varies according towhether the sport is called \"football\", \"soccer\", or \"association football\". More: https://en.wikipedia.org/wiki/Ball_(association_football)", 
+          "image_file": "./static/images/666d96e4f484cc8cfc8111d939ea84eb.jpg", 
+          "name": "Ball"
+        }, 
+        {
+          "description": "Since the 1980s significant advancements have been made in the design ofgloves, which now feature protectors to prevent the fingers bendingbackwards, segmentation to allow greater flexibility, and palms made ofmaterials designed to protect the hand and to enhance a player's grip. More: https://en.wikipedia.org/wiki/Kit_(association_football)", 
+          "image_file": "./static/images/e7e8218d667e67ceefc1b69046209bca.jpg", 
+          "name": "Gloves"
+        }
+      ], 
+      "name": "Soccer"
+    }, 
+    {
+      "items": [
+        {
+          "description": "Used to hit the ball", 
+          "image_file": null, 
+          "name": "Racket"
+        }, 
+        {
+          "description": "", 
+          "image_file": "./static/images/ef2bc65141a5468f4a6f1456272f08b8.jpg", 
+          "name": "Tennis Ball"
+        }
+      ], 
+      "name": "Tennis"
+    }, 
+    {
+      "items": [
+        {
+          "description": "", 
+          "image_file": null, 
+          "name": "Net"
+        }, 
+        {
+          "description": "", 
+          "image_file": null, 
+          "name": "Ball"
+        }
+      ], 
+      "name": "Volleyball"
+    }, 
+    {
+      "items": [
+        {
+          "description": "Used to see under water", 
+          "image_file": null, 
+          "name": "Swimming Googles"
+        }, 
+        {
+          "description": "", 
+          "image_file": null, 
+          "name": "Swimsuit"
+        }
+      ], 
+      "name": "Swimming"
+    }
+  ]
+}
