@@ -31,7 +31,7 @@ def disconnect():
         del session['username']
         del session['email']
         del session['provider']
-    return redirect(url_for('home'))
+    return ("ok", 200)
 
 
 @app.route('/gconnect', methods=['POST'])

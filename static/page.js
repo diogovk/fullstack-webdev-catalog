@@ -112,3 +112,16 @@ function googleLoginCallback(authResult) {
     });
   }
 }
+
+function logout() {
+  fetch("/disconnect", {
+    credentials: 'same-origin', //send cookies
+    }).then(function(response) {
+      return response.text();
+    }).then(function(body) {
+      if (body == "ok") {
+        console.log("Logout successful. Redirecting.");
+        window.location.href="/";
+      }
+    });
+}
