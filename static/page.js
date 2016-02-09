@@ -49,21 +49,44 @@ function editItem(id) {
     Navigation.access('/item/'+id+'/edit', 'Editing Item');
 }
 
+function checkStatus(response) {
+    // Throws error if http status is not success
+    // Assumes the request body is the error message
+    if (response.status >= 200 && response.status < 300) {
+      return response;
+    } else {
+      return response.text().then(function (body) {
+        throw new Error(body);
+      });
+    }
+}
 
 function postItem(url) {
+  // posts an Item to URL, with the data in the form #item_edit_form
+  // this can be used for new Items, or to update an item, since they use the same form
   fetch(url, {
     credentials: 'same-origin', //send cookies
     method: 'post',
     body: new FormData($("#item_edit_form"))
-  }).then(function(response) {
+  })
+  .then(checkStatus)
+  .then(function(response) {
     return response.text();
-  }).then(function(body) {
+  })
+  .then(function(body) {
     if ( body == 'ok'){
+      // item saved successfully
       Navigation.goBack();
     } else {
+      // re-render the form with HTML received from server
+      // most likely there are validation errors
       $(".page-content").innerHTML = body;
       componentHandler.upgradeDom();
     }
+  })
+  .catch(function(err) {
+    // unexpected error when requesting data
+    alert('Request failed: ' + err.message);
   });
 }
 

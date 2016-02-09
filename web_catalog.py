@@ -96,6 +96,8 @@ def new_item(id):
 
 @app.route('/items', methods=['POST'])
 def create_item():
+    if not session.get('username'):
+        return ("You must be logged in to be able to create items", 401)
     form = NewItemForm()
     if form.validate_on_submit():
         file = request.files.get(form.image_file.name)
@@ -119,6 +121,8 @@ def show_item(id):
 
 @app.route('/item/<int:id>', methods=['DELETE'])
 def delete_item(id):
+    if not session.get('username'):
+        return ("You must be logged in to be able to delete items", 401)
     item = Item.query.filter_by(id=id).first()
     if item:
         db.session.delete(item)
@@ -138,6 +142,8 @@ def edit_item(id):
 
 @app.route('/item/<int:id>', methods=['PUT', 'POST'])
 def update_item(id):
+    if not session.get('username'):
+        return ("You must be logged in to be able to delete items", 401)
     item = Item.query.filter_by(id=id).first()
     if not item:
         return "Not Found", 404
