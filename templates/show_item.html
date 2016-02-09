@@ -26,6 +26,7 @@ img.perfect-fit {
 </style>
 
 <div class="mdl-grid">
+{% if username %}
   <div class="mdl-cell mdl-cell--2-col button-cell">
     <button onclick="editItem({{ item.id }})" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect action-button">
       <i class="material-icons">edit</i>
@@ -37,6 +38,7 @@ img.perfect-fit {
       {{ csrf_form.csrf_token }}
     </form>
   </div>
+{% endif %}
   <div class="mdl-cell mdl-cell--6-col">
     <h2 class="item-title">
       {{ item.name }}

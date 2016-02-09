@@ -116,7 +116,10 @@ def create_item():
 def show_item(id):
     item = Item.query.filter_by(id=id).first()
     # CSRF needed for delete function
-    return render_template('show_item.html', item=item, csrf_form=Form())
+    return render_template('show_item.html',
+                           item=item,
+                           username=session.get('username'),
+                           csrf_form=Form())
 
 
 @app.route('/item/<int:id>', methods=['DELETE'])
