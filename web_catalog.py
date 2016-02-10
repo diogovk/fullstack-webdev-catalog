@@ -34,6 +34,15 @@ def disconnect():
     return ("ok", 200)
 
 
+@app.route('/fbconnect', methods=['POST'])
+def fbconnect():
+    with open('fb_client_secret_webcatalog.json') as json_file:
+        json_data = json.load(json_file)
+        app_secret = json_data["app_secret"]
+        app_id - json_data["app_id"]
+    print app_secret, app_id
+
+
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
     token = request.form["token"]
