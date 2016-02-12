@@ -4,7 +4,8 @@
         "componentHandler"      : false,
         "alert"  : false,
         "console": false,
-        "gapi": false
+        "gapi": false,
+        "FB": false
     },
     "globalstrict": true,
     "browser": true

@@ -19,15 +19,14 @@ var Navigation = {
     loadInPageContent: function(url, title) {
         fetch(url, {
           credentials: 'same-origin', //send cookies
-          }).then(function(response) {
-            return response.text();
-          }).then(function(body) {
-            $("#header-title").textContent = title + " - Catalog App";
-            $(".page-content").innerHTML = body;
-            $(".mdl-layout__content").scrollTop = 0;
-            componentHandler.upgradeDom();
-          });
-
+        })
+        .then(getResponseBody)
+        .then(function(body) {
+          $("#header-title").textContent = title + " - Catalog App";
+          $(".page-content").innerHTML = body;
+          $(".mdl-layout__content").scrollTop = 0;
+          componentHandler.upgradeDom();
+        });
     }
 };
 
@@ -70,9 +69,7 @@ function postItem(url) {
     body: new FormData($("#item_edit_form"))
   })
   .then(checkStatus)
-  .then(function(response) {
-    return response.text();
-  })
+  .then(getResponseBody)
   .then(function(body) {
     if ( body == 'ok'){
       // item saved successfully
@@ -99,9 +96,9 @@ function deleteItem(url, afterDeleteURL) {
     credentials: 'same-origin', //send cookies
     method: 'delete',
     body: new FormData($("#csrf_form"))
-  }).then(function(response) {
-    return response.text();
-  }).then(function(body) {
+  })
+  .then(getResponseBody)
+  .then(function(body) {
     if ( body == 'ok'){
       Navigation.access(afterDeleteURL);
     } else {
@@ -116,35 +113,54 @@ function toggleShowLoginPanel() {
   gapi.signin.go(login_panel);
 }
 
+function ifOkRedirectToHome(body) {
+   if (body == "ok") {
+     console.log("Login successful. Redirecting.");
+     window.location.href="/";
+   }
+}
+
+function getResponseBody(response) {
+    return response.text();
+}
+
 function googleLoginCallback(authResult) {
   if (authResult.code){
     $("#googleSignInButton").style.display = "none";
-    var data =new FormData($("#csrf_form"));
+    var data = new FormData($("#csrf_form"));
     data.append('token', authResult.code);
     fetch("/gconnect", {
       credentials: 'same-origin',
       method: 'post',
       body: data
-    }).then(function(response) {
-      return response.text();
-    }).then(function(body) {
-        if (body == "ok") {
-          console.log("Login successful. Redirecting.");
-          window.location.href="/";
-        }
-    });
+    })
+    .then(getResponseBody)
+    .then(ifOkRedirectToHome);
   }
 }
 
 function logout() {
   fetch("/disconnect", {
     credentials: 'same-origin', //send cookies
-    }).then(function(response) {
-      return response.text();
-    }).then(function(body) {
-      if (body == "ok") {
-        console.log("Logout successful. Redirecting.");
-        window.location.href="/";
-      }
-    });
+  })
+  .then(getResponseBody)
+  .then(ifOkRedirectToHome);
+}
+
+
+
+function facebookLoginCallback() {
+  var access_token = FB.getAuthResponse().accessToken;
+  FB.api('/me', function(response) {
+    console.log('Successful login for: ' + response.name);
+    var data =new FormData($("#csrf_form"));
+    data.append('token', access_token);
+    fetch('/fbconnect', {
+      credentials: 'same-origin', //send cookies
+      method: 'post',
+      body: data
+    })
+    .then(getResponseBody)
+    .then(ifOkRedirectToHome);
+  });
 }

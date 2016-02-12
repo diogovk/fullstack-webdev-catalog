@@ -38,6 +38,30 @@ window.___gcfg = {
     </style>
   </head>
   <body>
+    <!-- Facebook Sign-in -->
+<script>
+
+  window.fbAsyncInit = function() {
+  FB.init({
+    appId      : '876602909104158',
+    cookie     : true,  // enable cookies to allow the server to access
+                        // the session
+    xfbml      : true,  // parse social plugins on this page
+    version    : 'v2.2'
+  });
+
+  };
+
+  // Load the SDK asynchronously
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+
+</script>
     <form id="csrf_form" action="#" method="post" enctype=multipart/form-data>
       {{ csrf_form.csrf_token }}
     </form>
@@ -57,6 +81,11 @@ window.___gcfg = {
           </div>
           <hr>
           <div style="margin: 5px;"> Login with Facebook:</div>
+          <fb:login-button scope="public_profile,email" onlogin="facebookLoginCallback();">
+          </fb:login-button>
+
+          <div id="status">
+          </div>
       </div>
     {% endif %}
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
