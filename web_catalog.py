@@ -36,11 +36,23 @@ def disconnect():
 
 @app.route('/fbconnect', methods=['POST'])
 def fbconnect():
+    if 'provider' in session:
+        return ("you're already logged in", 200)
     with open('fb_client_secret_webcatalog.json') as json_file:
         json_data = json.load(json_file)
         app_secret = json_data["app_secret"]
-        app_id - json_data["app_id"]
-    print app_secret, app_id
+        app_id = json_data["app_id"]
+    token = request.form["token"]
+    params = {
+            'client_id': app_id,
+            'client_secret': app_secret,
+            'fb_exchange_token': token,
+            'grant_type': 'fb_exchange_token'
+            }
+    token_exachange_url = "https://graph.facebook.com/oauth/access_token"
+    answer = requests.get(token_exachange_url, params=params)
+    print answer.text
+    return ("ok", 200)
 
 
 @app.route('/gconnect', methods=['POST'])
