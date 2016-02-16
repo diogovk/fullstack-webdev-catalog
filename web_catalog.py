@@ -12,6 +12,7 @@ from helpers import get_image_extension, save_image
 import httplib2
 import json
 import requests
+import urlparse
 
 
 @app.route('/')
@@ -26,8 +27,11 @@ def home():
 @app.route('/disconnect')
 def disconnect():
     if 'provider' in session:
-        del session['credentials']
-        del session['gplus_id']
+        if session['provider'] == 'google':
+            del session['credentials']
+            del session['gplus_id']
+        if session['provider'] == 'facebook':
+            del session['facebook_id']
         del session['username']
         del session['email']
         del session['provider']
@@ -49,9 +53,20 @@ def fbconnect():
             'fb_exchange_token': token,
             'grant_type': 'fb_exchange_token'
             }
-    token_exachange_url = "https://graph.facebook.com/oauth/access_token"
-    answer = requests.get(token_exachange_url, params=params)
-    print answer.text
+    token_exchange_url = "https://graph.facebook.com/oauth/access_token"
+    answer = requests.get(token_exchange_url, params=params)
+    access_token = urlparse.parse_qs(answer.text)["access_token"][0]
+    params = {
+            'access_token': access_token,
+            'fields': 'name,id,email'
+            }
+    api_url = 'https://graph.facebook.com/v2.4/me'
+    answer = requests.get(api_url, params=params)
+    data = json.loads(answer.text)
+    session['provider'] = 'facebook'
+    session['username'] = data['name']
+    session['email'] = data['email']
+    session['facebook_id'] = data["id"]
     return ("ok", 200)
 
 
