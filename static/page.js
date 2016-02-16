@@ -137,6 +137,7 @@ function googleLoginCallback(authResult) {
     .then(getResponseBody)
     .then(ifOkRedirectToHome);
   }
+  waitForLogin();
 }
 
 function logout() {
@@ -147,7 +148,12 @@ function logout() {
   .then(ifOkRedirectToHome);
 }
 
-
+function waitForLogin() {
+  /* Disable login buttons and show a message asking to wait for the
+   * login process */
+  var login_panel = $("#login_panel");
+  login_panel.innerHTML="Login in progress.<br>You'll be redirected shortly.";
+}
 
 function facebookLoginCallback() {
   var access_token = FB.getAuthResponse().accessToken;
@@ -163,4 +169,5 @@ function facebookLoginCallback() {
     .then(getResponseBody)
     .then(ifOkRedirectToHome);
   });
+  waitForLogin();
 }
