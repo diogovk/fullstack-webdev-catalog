@@ -9,7 +9,6 @@ from flask_wtf.csrf import CsrfProtect
 from models import Item
 from models import Category, Item
 from helpers import get_image_extension, save_image
-import httplib2
 import json
 import requests
 import urlparse
@@ -46,6 +45,7 @@ def fbconnect():
         json_data = json.load(json_file)
         app_secret = json_data["app_secret"]
         app_id = json_data["app_id"]
+    # get short-lived token from request
     token = request.form["token"]
     params = {
             'client_id': app_id,
@@ -53,6 +53,7 @@ def fbconnect():
             'fb_exchange_token': token,
             'grant_type': 'fb_exchange_token'
             }
+    # Get long-lived access token from facebook
     token_exchange_url = "https://graph.facebook.com/oauth/access_token"
     answer = requests.get(token_exchange_url, params=params)
     access_token = urlparse.parse_qs(answer.text)["access_token"][0]
@@ -62,7 +63,7 @@ def fbconnect():
             }
     api_url = 'https://graph.facebook.com/v2.4/me'
     answer = requests.get(api_url, params=params)
-    data = json.loads(answer.text)
+    data = answer.json()
     session['provider'] = 'facebook'
     session['username'] = data['name']
     session['email'] = data['email']
@@ -82,8 +83,8 @@ def gconnect():
     access_token = credentials.access_token
     url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s'
            % access_token)
-    h = httplib2.Http()
-    result = json.loads(h.request(url, 'GET')[1])
+    answer = requests.get(url)
+    result = answer.json()
     # If there was an error in the access token info, abort
     if result.get('error') is not None:
         return (result.get('error'), 500)
