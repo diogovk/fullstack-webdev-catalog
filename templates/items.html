@@ -58,7 +58,9 @@
 
 <div class="mdl-grid">
 {% import 'macros/item_card.html' as item_card %}
-  {{ item_card.add_new(category_id) }}
+  {% if loggedin %}
+    {{ item_card.add_new(category_id) }}
+  {% endif %}
   {% for item in items %}
     {% if item.image_file %}
       {{ item_card.with_image(item) }}

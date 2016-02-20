@@ -121,7 +121,10 @@ def gconnect():
 @app.route('/category/<int:id>/items')
 def list_items(id):
     items = Item.query.filter_by(category_id=id).all()
-    return render_template('items.html', items=items, category_id=id)
+    return render_template('items.html',
+                           items=items,
+                           category_id=id,
+                           loggedin=bool(session.get('username')))
 
 
 @app.route('/category/<int:id>/items/new')
