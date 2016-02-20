@@ -1,0 +1,56 @@
+
+<style>
+
+.item-card {
+    height: 200px;
+}
+
+.item-card.without-image {
+    background: #FFE0B2;
+    cursor: pointer;
+}
+
+.item-card > .mdl-card__title {
+    align-items: flex-start;
+    height: 54px;
+    padding: 12px;
+}
+
+.item-card.with-image {
+    cursor: pointer;
+}
+
+.item-card.with-image > .mdl-card__title {
+    background: rgba(230, 81, 0, 0.45);
+}
+
+.item-card.without-image > .mdl-card__title {
+    background: #EF6C00;
+}
+
+
+.item-card > .mdl-card__title > h4 {
+    color: #fff;
+    margin-top: 0;
+    font-weight: 500;
+}
+
+.item-card > .mdl-card__actions {
+    display: flex;
+    box-sizing: border-box;
+    align-items: center;
+}
+
+</style>
+
+<div class="mdl-grid">
+  {% import 'macros/latest_item_card.html' as latest_item_card %}
+  {% for item in items %}
+    {% if item.image_file %}
+      {{ latest_item_card.with_image(item) }}
+    {% else %}
+      {{ latest_item_card.without_image(item) }}
+    {% endif %}
+  {% endfor %}
+</div>
+

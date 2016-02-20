@@ -1,0 +1,23 @@
+{% macro with_image(item) -%}
+  <div class="mdl-cell mdl-cell--4-col item-card with-image mdl-card mdl-shadow--2dp"
+       style="background: url('{{item.image_file}}') center / cover;"
+       onclick="Navigation.access('{{ item.url }}', '{{ item.name }}')">
+    <div class="mdl-card__title" >
+      <h4> {{ item.name }} ({{item.category.name}})</h4>
+    </div>
+    <div class="mdl-card__actions mdl-card--expand"></div>
+  </div>
+{%- endmacro %}
+
+
+{% macro without_image(item) -%}
+  <div class="mdl-cell mdl-cell--4-col item-card without-image mdl-card mdl-shadow--2dp"
+       onclick="Navigation.access('{{ item.url }}', '{{ item.name }}')">
+    <div class="mdl-card__title" >
+      <h4> {{ item.name }} ({{item.category.name}})</h4>
+    </div>
+    <div class="mdl-card__actions mdl-card--expand"></div>
+  </div>
+{%- endmacro %}
+
+

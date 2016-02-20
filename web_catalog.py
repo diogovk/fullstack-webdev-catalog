@@ -126,6 +126,10 @@ def list_items(id):
                            category_id=id,
                            loggedin=bool(session.get('username')))
 
+@app.route('/items/latest')
+def latest_items():
+    items = Item.query.order_by(Item.id.desc()).limit(9).all()
+    return render_template('latest_items.html', items=items)
 
 @app.route('/category/<int:id>/items/new')
 def new_item(id):
