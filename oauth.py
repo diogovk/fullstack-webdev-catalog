@@ -1,6 +1,7 @@
 from app import flow
 import requests
 
+
 def google_oauth(token, session):
     try:
         credentials = flow.step2_exchange(token)
@@ -44,4 +45,3 @@ def google_oauth(token, session):
     session['email'] = data['email']
     session['provider'] = 'google'
     return ('ok', 200)
-
