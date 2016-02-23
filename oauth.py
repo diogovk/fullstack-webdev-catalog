@@ -1,8 +1,24 @@
 from app import flow
 import requests
+import json
+
+
+# Loads facebook credentials for this server from json file
+with open('fb_client_secret_webcatalog.json') as json_file:
+    json_data = json.load(json_file)
+    facebook_app_secret = json_data["app_secret"]
+    facebook_app_id = json_data["app_id"]
 
 
 def google_oauth(token, session):
+    """
+    Authenticates with google using a short-lived token, and getting a long
+    one in the process.
+    The login information and long lived token are stored in the session.
+
+    Returns: http response with "ok" in case of success, or and http error
+             in the case of an error.
+    """
     try:
         credentials = flow.step2_exchange(token)
     except FlowAExchangeError:
@@ -45,3 +61,39 @@ def google_oauth(token, session):
     session['email'] = data['email']
     session['provider'] = 'google'
     return ('ok', 200)
+
+
+def facebook_oauth(token, session):
+    """
+    Authenticates with facebook using a short-lived token, and getting a long
+    one in the process.
+    The login information and long lived token are stored in the session.
+
+    Returns: http response with "ok" in case of success, or and http error in
+             the case of an error.
+    """
+    if 'provider' in session:
+        return ("you're already logged in", 200)
+    params = {
+            'client_id': facebook_app_id,
+            'client_secret': facebook_app_secret,
+            'fb_exchange_token': token,
+            'grant_type': 'fb_exchange_token'
+            }
+    # Get long-lived access token from facebook
+    token_exchange_url = "https://graph.facebook.com/oauth/access_token"
+    answer = requests.get(token_exchange_url, params=params)
+    access_token = urlparse.parse_qs(answer.text)["access_token"][0]
+    params = {
+            'access_token': access_token,
+            'fields': 'name,id,email'
+            }
+    # Gets user information from facebook api, and store it in the session
+    api_url = 'https://graph.facebook.com/v2.4/me'
+    answer = requests.get(api_url, params=params)
+    data = answer.json()
+    session['provider'] = 'facebook'
+    session['username'] = data['name']
+    session['email'] = data['email']
+    session['facebook_id'] = data["id"]
+    return ("ok", 200)

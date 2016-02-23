@@ -1,17 +1,14 @@
 #!/usr/bin/python2
 
 from flask_wtf import Form
-from flask import request, render_template, redirect, session, url_for, jsonify
-from oauth2client import client, crypt
+from flask import request, render_template, session, url_for, jsonify
 from app import app, db, flow
 from forms import NewItemForm
 from flask_wtf.csrf import CsrfProtect
 from models import Item
 from models import Category, Item
 from helpers import get_image_extension, save_image
-import json
 # do not confuse requests with flask.request
-from requests import get as http_get
 import urlparse
 import oauth
 
@@ -41,36 +38,9 @@ def disconnect():
 
 @app.route('/fbconnect', methods=['POST'])
 def fbconnect():
-    if 'provider' in session:
-        return ("you're already logged in", 200)
-    with open('fb_client_secret_webcatalog.json') as json_file:
-        json_data = json.load(json_file)
-        app_secret = json_data["app_secret"]
-        app_id = json_data["app_id"]
     # get short-lived token from request
     token = request.form["token"]
-    params = {
-            'client_id': app_id,
-            'client_secret': app_secret,
-            'fb_exchange_token': token,
-            'grant_type': 'fb_exchange_token'
-            }
-    # Get long-lived access token from facebook
-    token_exchange_url = "https://graph.facebook.com/oauth/access_token"
-    answer = http_get(token_exchange_url, params=params)
-    access_token = urlparse.parse_qs(answer.text)["access_token"][0]
-    params = {
-            'access_token': access_token,
-            'fields': 'name,id,email'
-            }
-    api_url = 'https://graph.facebook.com/v2.4/me'
-    answer = http_get(api_url, params=params)
-    data = answer.json()
-    session['provider'] = 'facebook'
-    session['username'] = data['name']
-    session['email'] = data['email']
-    session['facebook_id'] = data["id"]
-    return ("ok", 200)
+    return oauth.facebook_oauth(token, session)
 
 
 @app.route('/gconnect', methods=['POST'])
