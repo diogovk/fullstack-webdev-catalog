@@ -17,7 +17,7 @@ class WebCatalogCase(unittest.TestCase):
         self.app = web_catalog.app.test_client()
 
     def login(self):
-        # Mock login, as to avoid hitting google auth servers in tests
+        """ Mock login, as to avoid hitting google auth servers in tests """
         with self.app.session_transaction() as sess:
             sess['credentials'] = 'thisismyaccesstoken'
             sess['gplus_id'] = 66666666
@@ -25,13 +25,22 @@ class WebCatalogCase(unittest.TestCase):
             sess['email'] = 'johndoe@example.com'
             sess['provider'] = 'google'
 
+    def logout(self):
+        """ Logs out from the app returning server response"""
+        return self.app.get("/disconnect")
+
     def get_crsf_token_from_url(self, url):
+        """ GET the url, parsing the response and returns the crsf_token """
         page = self.app.get(url).data
         soup = BeautifulSoup(page, "html.parser")
         crsf_input = soup.find("input", id="csrf_token")
         return crsf_input.get('value')
 
     def test_login_button(self):
+        """
+        Login button should appear when logged off, but not when logged in.
+        Logout button should appear when logged in, but not when logged off.
+        """
         rv = self.app.get("/")
         assert 'Login' in rv.data
         assert 'Logout' not in rv.data
@@ -39,24 +48,36 @@ class WebCatalogCase(unittest.TestCase):
         rv = self.app.get("/")
         assert 'Login' not in rv.data
         assert 'Logout' in rv.data
-        rv = self.app.get("/disconnect", follow_redirects=True)
+        rv = self.logout()
+        assert rv.data == "ok"
+        rv = self.app.get("/")
         assert 'Login' in rv.data
         assert 'Logout' not in rv.data
 
     def test_csrf_check(self):
+        '''
+        Should reject the request if POST if doesn't have a valid crsf_token
+        '''
         item_count = db.session.query(Item.id).count()
         category_id = get_existing_category_id()
-        # should reject if post if doesn't have crsf_token
+        self.login()
+        rv = self.app.post("/items", data=dict(
+            name="Thingy", description="A Thingy thing",
+            category_id=category_id,
+            csrf_token="thisisaninvalidcrfstoken"))
+        assert rv.status_code == 400
         rv = self.app.post("/items", data=dict(
             name="Thingy", description="A Thingy thing",
             category_id=category_id))
         assert rv.status_code == 400
         current_item_count = db.session.query(Item.id).count()
-        assert item_count == current_item_count  # no increase
+        assert item_count == current_item_count
+        self.logout()
 
     def test_new_item(self):
         item_count = db.session.query(Item.id).count()
         category_id = get_existing_category_id()
+        self.login()
         # should accept and add to the DB if crsf_token is correct
         csrf_token = self.get_crsf_token_from_url(
                 "/category/%s/items/new" % category_id)
@@ -69,8 +90,10 @@ class WebCatalogCase(unittest.TestCase):
         assert rv.data == "ok"
         current_item_count = db.session.query(Item.id).count()
         assert (item_count+1) == current_item_count
+        self.logout()
 
     def test_edit_item(self):
+        self.login()
         item = db.session.query(Item).filter_by(name="Thingy").first()
         csrf_token = self.get_crsf_token_from_url("%s/edit" % item.url)
         rv = self.app.post(item.url, data=dict(
@@ -81,11 +104,11 @@ class WebCatalogCase(unittest.TestCase):
         assert rv.data == "ok"
         updated_item = db.session.query(Item).filter_by(id=item.id).first()
         assert updated_item.name == "Renamed Thingy"
+        self.logout()
 
     def test_category_json(self):
         rv = self.app.get("/catalog.json")
         assert rv.status_code == 200
-        print rv.data
         # Will raise exception if not valid JSON
         json.loads(rv.data)
 
