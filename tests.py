@@ -19,7 +19,7 @@ class WebCatalogCase(unittest.TestCase):
     def login(self):
         """ Mock login, as to avoid hitting google auth servers in tests """
         with self.app.session_transaction() as sess:
-            sess['credentials'] = 'thisismyaccesstoken'
+            sess['access_token'] = 'thisismyaccesstoken'
             sess['gplus_id'] = 66666666
             sess['username'] = 'John Doe'
             sess['email'] = 'johndoe@example.com'
@@ -105,6 +105,19 @@ class WebCatalogCase(unittest.TestCase):
         updated_item = db.session.query(Item).filter_by(id=item.id).first()
         assert updated_item.name == "Renamed Thingy"
         self.logout()
+
+    def test_delete_item(self):
+        item_count = db.session.query(Item.id).count()
+        self.login()
+        item = db.session.query(Item).filter_by(name="Renamed Thingy").first()
+        csrf_token = self.get_crsf_token_from_url("%s" % item.url)
+        rv = self.app.delete(item.url, data=dict(csrf_token=csrf_token))
+        assert rv.status_code == 200
+        assert rv.data == "ok"
+        current_item_count = db.session.query(Item.id).count()
+        assert (item_count-1) == current_item_count
+        self.logout()
+
 
     def test_category_json(self):
         rv = self.app.get("/catalog.json")
