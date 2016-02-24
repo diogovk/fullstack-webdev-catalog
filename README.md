@@ -9,6 +9,7 @@ apiclient
 oauth2client
 SQLAlchemy
 Flask-Migrate
+dicttoxml
 ```
 
 ## WebApp credentials with Google
@@ -46,6 +47,20 @@ python2 seed_database.py
 ```
 ./web-catalog.py
 ```
+
+## Execute tests
+```
+python2 tests.py
+```
+
+## Check JSON and XML endpoints
+```
+curl -I http://localhost:5000/catalog.json
+curl http://localhost:5000/catalog.json
+curl -I http://localhost:5000/catalog.xml
+curl http://localhost:5000/catalog.xml
+```
+
 
 ### References
 https://developers.google.com/identity/sign-in/web/backend-auth

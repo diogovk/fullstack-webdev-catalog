@@ -1,7 +1,7 @@
 #!/usr/bin/python2
 
 from flask_wtf import Form
-from flask import request, render_template, session, url_for, jsonify
+from flask import request, render_template, session, url_for, jsonify, Response
 from app import app, db, flow
 from forms import NewItemForm
 from flask_wtf.csrf import CsrfProtect
@@ -10,6 +10,7 @@ from models import Category, Item
 from helpers import get_image_extension, save_image
 # do not confuse requests with flask.request
 import oauth
+from dicttoxml import dicttoxml
 
 
 @app.route('/')
@@ -147,6 +148,14 @@ def catalog_json():
     categories = Category.query.all()
     category_list = [category.serialize for category in categories]
     return jsonify(categories=category_list)
+
+
+@app.route('/catalog.xml')
+def catalog_xml():
+    categories = Category.query.all()
+    category_list = [category.serialize for category in categories]
+    xml = dicttoxml(category_list, custom_root="categories")
+    return Response(xml, mimetype='text/xml')
 
 
 if __name__ == '__main__':
