@@ -1,4 +1,5 @@
 from app import flow
+import urlparse
 import requests
 import json
 
@@ -84,6 +85,7 @@ def facebook_oauth(token, session):
     token_exchange_url = "https://graph.facebook.com/oauth/access_token"
     answer = requests.get(token_exchange_url, params=params)
     access_token = urlparse.parse_qs(answer.text)["access_token"][0]
+    session['access_token'] = access_token
     params = {
             'access_token': access_token,
             'fields': 'name,id,email'
@@ -100,13 +102,16 @@ def facebook_oauth(token, session):
 
 
 def google_revoke_token(token):
+    """ Uses google api to revoke a access_token.
+    Return the http status code received from server"""
     url = "https://accounts.google.com/o/oauth2/revoke"
     answer = requests.get(url, params={"token": token})
-    if answer.status_code != 200:
-        # Most likely the token was invalid
-        return False
-    return True
+    return answer.status_code
 
 
-def facebook_revoke_token(token):
-    pass
+def facebook_revoke_token(facebook_id, token):
+    """ Uses facebook api to revoke a access_token
+    Return the http status code received from server"""
+    url = "https://graph.facebook.com/%s/permissions" % facebook_id
+    answer = requests.delete(url, params={"access_token": token})
+    return answer.status_code

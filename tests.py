@@ -118,7 +118,6 @@ class WebCatalogCase(unittest.TestCase):
         assert (item_count-1) == current_item_count
         self.logout()
 
-
     def test_category_json(self):
         rv = self.app.get("/catalog.json")
         assert rv.status_code == 200
