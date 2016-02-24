@@ -36,3 +36,13 @@ class Item(db.Model):
                 "description": self.description,
                 "image_file": self.image_file
                 }
+
+    @property
+    def serialize_verbose(self):
+        return {
+                "name": self.name,
+                "id": self.id,
+                "description": self.description,
+                "image_file": self.image_file,
+                "category": self.category.name
+                }

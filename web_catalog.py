@@ -92,6 +92,16 @@ def create_item():
     return render_template('edit_item.html', form=form, action="/items")
 
 
+@app.route('/item/<int:id>/json', methods=['GET'])
+def item_json(id):
+    item = Item.query.filter_by(id=id).first()
+    if item:
+        return jsonify(item=item.serialize_verbose)
+    resp = jsonify(error="Not found")
+    resp.status_code = 404
+    return resp
+
+
 @app.route('/item/<int:id>', methods=['GET'])
 def show_item(id):
     item = Item.query.filter_by(id=id).first()

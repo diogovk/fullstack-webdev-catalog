@@ -59,6 +59,8 @@ curl -I http://localhost:5000/catalog.json
 curl http://localhost:5000/catalog.json
 curl -I http://localhost:5000/catalog.xml
 curl http://localhost:5000/catalog.xml
+# Get specific item
+curl http://localhost:5000/item/9/json
 ```
 
 
