@@ -26,6 +26,9 @@ def home():
 def disconnect():
     if 'provider' in session:
         if session['provider'] == 'google':
+            credentials = session.get("credentials")
+            if credentials is not None:
+                print oauth.google_revoke_token(credentials)
             del session['credentials']
             del session['gplus_id']
         if session['provider'] == 'facebook':

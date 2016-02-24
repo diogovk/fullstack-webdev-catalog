@@ -97,3 +97,16 @@ def facebook_oauth(token, session):
     session['email'] = data['email']
     session['facebook_id'] = data["id"]
     return ("ok", 200)
+
+
+def google_revoke_token(token):
+    url = "https://accounts.google.com/o/oauth2/revoke"
+    answer = requests.get(url, params={"token": token})
+    if answer.status_code != 200:
+        # Most likely the token was invalid
+        return False
+    return True
+
+
+def facebook_revoke_token(token):
+    pass
