@@ -88,7 +88,7 @@ function postItem(url) {
 }
 
 
-function deleteItem(url, afterDeleteURL) {
+function deleteItem(url, afterDeleteURL, afterDeleteTitle) {
   if (! confirm("Are you sure you want to delete this item?")){
       return;
   }
@@ -100,7 +100,7 @@ function deleteItem(url, afterDeleteURL) {
   .then(getResponseBody)
   .then(function(body) {
     if ( body == 'ok'){
-      Navigation.access(afterDeleteURL);
+      Navigation.access(afterDeleteURL, afterDeleteTitle);
     } else {
       alert(body);
     }
