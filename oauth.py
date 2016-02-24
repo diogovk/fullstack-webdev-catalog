@@ -43,12 +43,12 @@ def google_oauth(token, session):
     if result['issued_to'] != flow.client_id:
         return ("Token's client ID does not match app's", 401)
 
-    stored_credentials = session.get('credentials')
+    stored_access_token = session.get('access_token')
     stored_gplus_id = session.get('gplus_id')
-    if stored_credentials is not None and gplus_id == stored_gplus_id:
+    if stored_access_token is not None and gplus_id == stored_gplus_id:
         return ('Current user is already connected', 200)
 
-    session['credentials'] = credentials.access_token
+    session['access_token'] = credentials.access_token
     session['gplus_id'] = gplus_id
 
     # Get user info
