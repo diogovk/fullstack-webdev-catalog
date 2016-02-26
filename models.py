@@ -41,11 +41,8 @@ class Item(db.Model):
     description = db.Column(db.String(500))
     category_id = db.Column(
             db.Integer, db.ForeignKey('category.id'), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     image_file = db.Column(db.String(128))
-
-    def is_owned_by(self, user):
-        self.user_id == user.id
 
     @property
     def url(self):
