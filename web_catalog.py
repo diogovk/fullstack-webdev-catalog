@@ -77,7 +77,8 @@ def new_item(id):
 
 @app.route('/items', methods=['POST'])
 def create_item():
-    if not session.get('username'):
+    owner_id = session.get('user_id')
+    if not owner_id:
         return ("You must be logged in to be able to create items", 401)
     form = NewItemForm()
     if form.validate_on_submit():
@@ -86,7 +87,8 @@ def create_item():
         new_item = Item(name=form.data["name"],
                         category_id=form.data["category_id"],
                         description=form.data["description"],
-                        image_file=saved_path)
+                        image_file=saved_path,
+                        owner_id=owner_id)
         db.session.add(new_item)
         db.session.commit()
         return "ok"
@@ -115,14 +117,17 @@ def show_item(id):
 
 @app.route('/item/<int:id>', methods=['DELETE'])
 def delete_item(id):
-    if not session.get('username'):
+    user_id = session.get('user_id')
+    if not user_id:
         return ("You must be logged in to be able to delete items", 401)
     item = Item.query.filter_by(id=id).first()
-    if item:
-        db.session.delete(item)
-        db.session.commit()
-        return "ok"
-    return "Not Found", 404
+    if not item:
+        return ("Not Found", 404)
+    if item.owner_id != user_id:
+        return ("This item doesn't belong to you", 401)
+    db.session.delete(item)
+    db.session.commit()
+    return ("ok", 200)
 
 
 @app.route('/item/<int:id>/edit')
@@ -136,11 +141,14 @@ def edit_item(id):
 
 @app.route('/item/<int:id>', methods=['PUT', 'POST'])
 def update_item(id):
-    if not session.get('username'):
-        return ("You must be logged in to be able to delete items", 401)
+    user_id = session.get('user_id')
+    if not user_id:
+        return ("You must be logged in to be able to edit items", 401)
     item = Item.query.filter_by(id=id).first()
     if not item:
         return "Not Found", 404
+    if item.owner_id != user_id:
+        return ("This item doesn't belong to you", 401)
     form = NewItemForm(obj=item)
     if form.validate_on_submit():
         file = request.files.get(form.image_file.name)
