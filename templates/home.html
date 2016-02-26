@@ -65,7 +65,7 @@ window.___gcfg = {
     <form id="csrf_form" action="#" method="post" enctype=multipart/form-data>
       {{ csrf_form.csrf_token }}
     </form>
-    {% if not username %}
+    {% if not logged_in %}
       <div id="login_panel" class="login_panel" hidden>
           <span style="padding-botton: 30px;"> Login with google:</span>
           <div id="googleSignInButton">
@@ -93,7 +93,7 @@ window.___gcfg = {
         <div class="mdl-layout__header-row">
           <div class="mdl-layout-spacer"></div>
           <span id="header-title" class=mdl-layout-title>Catalog App</span>
-          {% if not username %}
+          {% if not logged_in %}
             <button style="margin: 10px; color: white; background-color: #EF6C00;" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect "
                 onclick="toggleShowLoginPanel()">
                 <strong>Login</strong>

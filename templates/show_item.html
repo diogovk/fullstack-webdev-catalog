@@ -26,7 +26,7 @@ img.perfect-fit {
 </style>
 
 <div class="mdl-grid">
-{% if username %}
+{% if is_owner %}
   <div class="mdl-cell mdl-cell--2-col button-cell">
     <button onclick="editItem({{ item.id }})" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect action-button">
       <i class="material-icons">edit</i>

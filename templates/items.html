@@ -58,7 +58,7 @@
 
 <div class="mdl-grid">
 {% import 'macros/item_card.html' as item_card %}
-  {% if loggedin %}
+  {% if logged_in %}
     {{ item_card.add_new(category_id) }}
   {% endif %}
   {% for item in items %}

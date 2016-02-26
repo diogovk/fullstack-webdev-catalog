@@ -18,7 +18,7 @@ def home():
     categories = Category.query.all()
     return render_template('home.html', categories=categories,
                            flow=flow,
-                           username=session.get('username'),
+                           logged_in=(session.get('user_id') is not None),
                            csrf_form=Form())
 
 
@@ -59,7 +59,7 @@ def list_items(id):
     return render_template('items.html',
                            items=items,
                            category_id=id,
-                           loggedin=bool(session.get('username')))
+                           logged_in=(session.get('user_id') is not None))
 
 
 @app.route('/items/latest')
@@ -108,10 +108,12 @@ def item_json(id):
 @app.route('/item/<int:id>', methods=['GET'])
 def show_item(id):
     item = Item.query.filter_by(id=id).first()
-    # CSRF needed for delete function
+    user_id = session.get('user_id')
+    is_owner = user_id is not None and (user_id == item.owner_id)
     return render_template('show_item.html',
                            item=item,
-                           username=session.get('username'),
+                           is_owner=is_owner,
+                           # CSRF needed for delete function
                            csrf_form=Form())
 
 
