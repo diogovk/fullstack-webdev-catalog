@@ -2,6 +2,7 @@ from app import flow
 import urlparse
 import requests
 import json
+from models import User
 
 
 # Loads facebook credentials for this server from json file
@@ -15,9 +16,15 @@ def google_oauth(token, session):
     """
     Authenticates with google using a short-lived token, and getting a long
     one in the process.
-    The login information and long lived token are stored in the session.
+    The following will be stored in session:
+    * user_id - Local ID of the user
+    * username - Name of the user
+    * access_token - Long lived token received from google
+    * email - User's email
+    * provider - The login provider (google)
+    * gplus_id - ID of the user in google
 
-    Returns: http response with "ok" in case of success, or and http error
+    Returns: http response with "ok" in case of success, or an http error
              in the case of an error.
     """
     try:
@@ -58,6 +65,7 @@ def google_oauth(token, session):
     answer = requests.get(userinfo_url, params=params)
     data = answer.json()
 
+    session['user_id'] = User.get_or_create(data['email']).id
     session['username'] = data['name']
     session['email'] = data['email']
     session['provider'] = 'google'
@@ -68,7 +76,13 @@ def facebook_oauth(token, session):
     """
     Authenticates with facebook using a short-lived token, and getting a long
     one in the process.
-    The login information and long lived token are stored in the session.
+    The following will be stored in session:
+    * user_id - Local ID of the user
+    * username - Name of the user
+    * access_token - Long lived token received from google
+    * email - User's email
+    * provider - The login provider (facebook)
+    * facebook_id - The user ID in Facebook
 
     Returns: http response with "ok" in case of success, or and http error in
              the case of an error.
@@ -94,6 +108,7 @@ def facebook_oauth(token, session):
     api_url = 'https://graph.facebook.com/v2.4/me'
     answer = requests.get(api_url, params=params)
     data = answer.json()
+    session['user_id'] = User.get_or_create(data['email']).id
     session['provider'] = 'facebook'
     session['username'] = data['name']
     session['email'] = data['email']

@@ -34,6 +34,7 @@ def disconnect():
             del session['facebook_id']
         del session['access_token']
         del session['username']
+        del session['user_id']
         del session['email']
         del session['provider']
     return ("ok", 200)
