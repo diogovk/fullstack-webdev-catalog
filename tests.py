@@ -1,7 +1,7 @@
 import web_catalog
 import unittest
 from app import db
-from models import Item, Category
+from models import Item, Category, User
 from bs4 import BeautifulSoup
 import json
 
@@ -15,6 +15,7 @@ class WebCatalogCase(unittest.TestCase):
     def setUp(self):
         web_catalog.app.config['TESTING'] = True
         self.app = web_catalog.app.test_client()
+        self.test_user = User.get_or_create("mytestuser@example.com")
 
     def login(self):
         """ Mock login, as to avoid hitting google auth servers in tests """
@@ -24,6 +25,7 @@ class WebCatalogCase(unittest.TestCase):
             sess['username'] = 'John Doe'
             sess['email'] = 'johndoe@example.com'
             sess['provider'] = 'google'
+            sess['user_id'] = self.test_user.id
 
     def logout(self):
         """ Logs out from the app returning server response"""
@@ -71,14 +73,15 @@ class WebCatalogCase(unittest.TestCase):
             category_id=category_id))
         assert rv.status_code == 400
         current_item_count = db.session.query(Item.id).count()
+        # Number of items should not change
         assert item_count == current_item_count
         self.logout()
 
     def test_new_item(self):
+        ''' should accept and add to the DB if crsf_token is correct '''
         item_count = db.session.query(Item.id).count()
         category_id = get_existing_category_id()
         self.login()
-        # should accept and add to the DB if crsf_token is correct
         csrf_token = self.get_crsf_token_from_url(
                 "/category/%s/items/new" % category_id)
         rv = self.app.post("/items", data=dict(
@@ -93,8 +96,10 @@ class WebCatalogCase(unittest.TestCase):
         self.logout()
 
     def test_edit_item(self):
+        ''' should be able to edit your own items '''
         self.login()
-        item = db.session.query(Item).filter_by(name="Thingy").first()
+        item = db.session.query(Item).filter_by(
+                name="Thingy", owner_id=self.test_user.id).first()
         csrf_token = self.get_crsf_token_from_url("%s/edit" % item.url)
         rv = self.app.post(item.url, data=dict(
             name="Renamed Thingy",
@@ -107,9 +112,11 @@ class WebCatalogCase(unittest.TestCase):
         self.logout()
 
     def test_delete_item(self):
+        ''' should be able to delete your own items '''
         item_count = db.session.query(Item.id).count()
         self.login()
-        item = db.session.query(Item).filter_by(name="Renamed Thingy").first()
+        item = db.session.query(Item).filter_by(
+                name="Renamed Thingy", owner_id=self.test_user.id).first()
         csrf_token = self.get_crsf_token_from_url("%s" % item.url)
         rv = self.app.delete(item.url, data=dict(csrf_token=csrf_token))
         assert rv.status_code == 200
