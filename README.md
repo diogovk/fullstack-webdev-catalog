@@ -51,8 +51,13 @@ python2 seed_database.py
 ## CRUD: Edit/Delete
 
 Please note that you'll only be able to delete edit items that were created with your user.
-Items inserted from seed data won't be changeable from the web interface, until associated with
-an existing user.
+Items inserted from seed data, are associated with the seed user "seeduser@example.com" and 
+won't be changeable from the web interface until associated with a user that can actually login.
+
+This can be done using the following, directly in the database:
+```
+update "user" set email='youremail@gmail.com' where email='seeduser@example.com';
+```
 
 
 ## Execute tests

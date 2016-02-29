@@ -1,7 +1,8 @@
 from app import db
-from models import Category, Item
+from models import Category, Item, User
 import json
 
+seed_user = User.get_or_create("seeduser@example.com")
 
 if __name__ == '__main__':
     # Load sample data from json file
@@ -16,6 +17,7 @@ if __name__ == '__main__':
         for item in category_data["items"]:
             item = Item(name=item["name"], category_id=category.id,
                         description=item["description"],
-                        image_file=item["image_file"])
+                        image_file=item["image_file"],
+                        owner_id=seed_user.id)
             db.session.add(item)
             db.session.commit()
