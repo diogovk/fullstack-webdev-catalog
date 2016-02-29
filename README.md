@@ -48,6 +48,13 @@ python2 seed_database.py
 ./web-catalog.py
 ```
 
+## CRUD: Edit/Delete
+
+Please note that you'll only be able to delete edit items that were created with your user.
+Items inserted from seed data won't be changeable from the web interface, until associated with
+an existing user.
+
+
 ## Execute tests
 ```
 python2 tests.py
@@ -55,9 +62,11 @@ python2 tests.py
 
 ## Check JSON and XML endpoints
 ```
+# Headers
 curl -I http://localhost:5000/catalog.json
-curl http://localhost:5000/catalog.json
 curl -I http://localhost:5000/catalog.xml
+# Content
+curl http://localhost:5000/catalog.json
 curl http://localhost:5000/catalog.xml
 # Get specific item
 curl http://localhost:5000/item/9/json
