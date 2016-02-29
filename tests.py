@@ -18,7 +18,7 @@ class WebCatalogCase(unittest.TestCase):
         self.test_user = User.get_or_create("mytestuser@example.com")
 
     def login(self):
-        """ Mock login, as to avoid hitting google auth servers in tests """
+        """ Mock login, as to avoid hitting third party auth servers in tests """
         with self.app.session_transaction() as sess:
             sess['access_token'] = 'thisismyaccesstoken'
             sess['gplus_id'] = 66666666
@@ -26,6 +26,13 @@ class WebCatalogCase(unittest.TestCase):
             sess['email'] = 'johndoe@example.com'
             sess['provider'] = 'google'
             sess['user_id'] = self.test_user.id
+
+    def create_item(self, item_name):
+        """ creates an item with the given name """
+        item = Item(name=item_name, category_id=get_existing_category_id(),
+                    owner_id=self.test_user.id)
+        db.session.add(item)
+        db.session.commit()
 
     def logout(self):
         """ Logs out from the app returning server response"""
@@ -64,12 +71,12 @@ class WebCatalogCase(unittest.TestCase):
         category_id = get_existing_category_id()
         self.login()
         rv = self.app.post("/items", data=dict(
-            name="Thingy", description="A Thingy thing",
+            name="My New Item", description="A Thingy thing",
             category_id=category_id,
-            csrf_token="thisisaninvalidcrfstoken"))
+            csrf_token="thisisaninvalidcsrftoken"))
         assert rv.status_code == 400
         rv = self.app.post("/items", data=dict(
-            name="Thingy", description="A Thingy thing",
+            name="My New Item", description="A Thingy thing",
             category_id=category_id))
         assert rv.status_code == 400
         current_item_count = db.session.query(Item.id).count()
@@ -85,7 +92,7 @@ class WebCatalogCase(unittest.TestCase):
         csrf_token = self.get_crsf_token_from_url(
                 "/category/%s/items/new" % category_id)
         rv = self.app.post("/items", data=dict(
-            name="Thingy",
+            name="My New Item",
             description="A Thingy thing",
             category_id=category_id,
             csrf_token=csrf_token))
@@ -98,26 +105,29 @@ class WebCatalogCase(unittest.TestCase):
     def test_edit_item(self):
         ''' should be able to edit your own items '''
         self.login()
+        self.create_item("Edit Me")
         item = db.session.query(Item).filter_by(
-                name="Thingy", owner_id=self.test_user.id).first()
+                name="Edit Me", owner_id=self.test_user.id).first()
         csrf_token = self.get_crsf_token_from_url("%s/edit" % item.url)
         rv = self.app.post(item.url, data=dict(
-            name="Renamed Thingy",
+            name="Item Edited",
             description="A Thingy thing",
             csrf_token=csrf_token))
         assert rv.status_code == 200
         assert rv.data == "ok"
         updated_item = db.session.query(Item).filter_by(id=item.id).first()
-        assert updated_item.name == "Renamed Thingy"
+        assert updated_item.name == "Item Edited"
         self.logout()
 
     def test_delete_item(self):
         ''' should be able to delete your own items '''
-        item_count = db.session.query(Item.id).count()
         self.login()
+        self.create_item("Delete Me")
+        item_count = db.session.query(Item.id).count()
         item = db.session.query(Item).filter_by(
-                name="Renamed Thingy", owner_id=self.test_user.id).first()
+                name="Delete Me", owner_id=self.test_user.id).first()
         csrf_token = self.get_crsf_token_from_url("%s" % item.url)
+        # Makes an HTTP DELETE request
         rv = self.app.delete(item.url, data=dict(csrf_token=csrf_token))
         assert rv.status_code == 200
         assert rv.data == "ok"
@@ -126,11 +136,16 @@ class WebCatalogCase(unittest.TestCase):
         self.logout()
 
     def test_category_json(self):
+        ''' Should return valid json in /catalog.json '''
         rv = self.app.get("/catalog.json")
         assert rv.status_code == 200
         # Will raise exception if not valid JSON
         json.loads(rv.data)
 
+    def tearDown(self):
+        ''' Cleanup all items done with the test user '''
+        items = Item.query.filter_by(owner_id=self.test_user.id).delete()
+        db.session.commit()
 
 if __name__ == '__main__':
     unittest.main()
