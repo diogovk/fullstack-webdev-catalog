@@ -2,7 +2,7 @@
 
 from flask_wtf import Form
 from flask import request, render_template, session, url_for, jsonify, Response
-from app import app, db, flow
+from app import app, db
 from forms import NewItemForm
 from flask_wtf.csrf import CsrfProtect
 from models import Item
@@ -17,7 +17,7 @@ from dicttoxml import dicttoxml
 def home():
     categories = Category.query.all()
     return render_template('home.html', categories=categories,
-                           flow=flow,
+                           flow=oauth.flow,
                            logged_in=(session.get('user_id') is not None),
                            csrf_form=Form())
 

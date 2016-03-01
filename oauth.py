@@ -4,6 +4,11 @@ import requests
 import json
 from models import User
 
+# Flow object used in google sign in
+flow = flow_from_clientsecrets('client_secret_webcatalog.json',
+                               scope='openid email',
+                               redirect_uri='postmessage')
+
 
 # Loads facebook credentials for this server from json file
 with open('fb_client_secret_webcatalog.json') as json_file:
