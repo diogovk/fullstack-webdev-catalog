@@ -12,10 +12,15 @@ def get_existing_category_id():
 
 class WebCatalogCase(unittest.TestCase):
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
         web_catalog.app.config['TESTING'] = True
+        cls.test_user = User.get_or_create("mytestuser@example.com")
+        # make user object is bound to session
+        db.session.refresh(cls.test_user)
+
+    def setUp(self):
         self.app = web_catalog.app.test_client()
-        self.test_user = User.get_or_create("mytestuser@example.com")
 
     def login(self):
         """ Mock login, as to avoid hitting third party auth servers in tests """
@@ -144,7 +149,7 @@ class WebCatalogCase(unittest.TestCase):
 
     def tearDown(self):
         ''' Cleanup all items done with the test user '''
-        items = Item.query.filter_by(owner_id=self.test_user.id).delete()
+        db.session.query(Item).filter_by(owner_id=self.test_user.id).delete()
         db.session.commit()
 
 if __name__ == '__main__':
