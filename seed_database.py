@@ -1,11 +1,12 @@
+# Loads sample data from seed_data.json into the database
 from app import db
 from models import Category, Item, User
 import json
 
+# Creates a user to "own" the sample items
 seed_user = User.get_or_create("seeduser@example.com")
 
 if __name__ == '__main__':
-    # Load sample data from json file
     with open('seed_data.json') as json_file:
         json_data = json.load(json_file)
     categories_data = json_data["categories"]

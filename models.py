@@ -3,6 +3,10 @@ from sqlalchemy.orm import relationship
 
 
 class Category(db.Model):
+    """
+    A category of item.
+    Each item must have a category
+    """
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), unique=True, nullable=False)
     items = relationship("Item", backref="category")
@@ -16,6 +20,11 @@ class Category(db.Model):
                 }
 
 class User(db.Model):
+    """
+    A user of the webapp.
+    Each user is identified by it's email.
+    The email is returned from the third party oauth system during login.
+    """
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(128), unique=True, nullable=False)
 
@@ -36,6 +45,13 @@ class User(db.Model):
 
 
 class Item(db.Model):
+    """
+    An Item.
+    Must have exactly one category, identified by its id.
+    The user that creates the item is its owner.
+    Items also have name, a description and the path to an image file, which is
+    stored outside of the database.
+    """
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), nullable=False)
     description = db.Column(db.String(500))

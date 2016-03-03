@@ -6,16 +6,24 @@ from flask import request
 
 
 class NewItemForm(Form):
+    """ Form used to create or edit a new Item """
     name = TextField('Title', [
         validators.Length(min=3, max=128),
         validators.DataRequired()
         ])
     description = TextField('Title', [])
+    # image path in the filesystem
     image_file = FileField('Image', [])
     category_id = HiddenField('Category ID', [])
 
     def validate_image_file(form, field):
-        # This field is optional, so empty is considered valid
+        '''
+        Validates the image_file field.
+        The request is considered valid if:
+        * image_file is empty, since it's optional.
+        * image file is of known image extension and the there's a file in the
+            request.
+        '''
         if not field.data:
             return
         extension = get_image_extension(field.data.filename)
