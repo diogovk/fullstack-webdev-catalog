@@ -1,7 +1,8 @@
 apt-get -qqy update
 apt-get -qqy install postgresql python-psycopg2
-apt-get -qqy install python-flask python-sqlalchemy python-bs4
+apt-get -qqy install python-sqlalchemy python-bs4
 apt-get -qqy install python-pip
+pip2 install Flask
 pip2 install oauth2client
 pip2 install requests
 pip2 install Flask-Migrate
