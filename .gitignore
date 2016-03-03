@@ -7,8 +7,6 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-env/
-build/
 develop-eggs/
 dist/
 downloads/
@@ -43,18 +41,8 @@ nosetests.xml
 coverage.xml
 *,cover
 
-# Translations
-*.mo
-*.pot
-
 # Django stuff:
 *.log
 
-# Sphinx documentation
-docs/_build/
 
-# PyBuilder
-target/
-
-# The database containg the actual data should not be included in the project
-app.db
+.vagrant/
