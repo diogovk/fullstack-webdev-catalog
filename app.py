@@ -3,7 +3,6 @@
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CsrfProtect
-from oauth2client.client import flow_from_clientsecrets
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'mkd89$lpkkbeshuretochangeme'

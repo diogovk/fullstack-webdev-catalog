@@ -1,8 +1,8 @@
-from app import flow
 import urlparse
 import requests
 import json
 from models import User
+from oauth2client.client import flow_from_clientsecrets
 
 # Flow object used in google sign in
 flow = flow_from_clientsecrets('client_secret_webcatalog.json',
