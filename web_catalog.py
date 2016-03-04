@@ -24,6 +24,7 @@ def home():
 
 @app.route('/disconnect')
 def disconnect():
+    ''' Disconnects a logged in user '''
     if 'provider' in session:
         if session['provider'] == 'google':
             oauth.google_revoke_token(session.get("access_token"))
@@ -42,6 +43,7 @@ def disconnect():
 
 @app.route('/fbconnect', methods=['POST'])
 def fbconnect():
+    ''' Logs in a user using facebook oath '''
     # get short-lived token from request
     token = request.form["token"]
     return oauth.facebook_oauth(token, session)
@@ -49,12 +51,14 @@ def fbconnect():
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
+    ''' Logs in a user using google oath '''
     token = request.form["token"]
     return oauth.google_oauth(token, session)
 
 
 @app.route('/category/<int:id>/items')
 def list_items(id):
+    ''' list items of a category in a grid  '''
     items = Item.query.filter_by(category_id=id).all()
     return render_template('items.html',
                            items=items,
@@ -64,12 +68,14 @@ def list_items(id):
 
 @app.route('/items/latest')
 def latest_items():
+    ''' list the latest 9 saved items  '''
     items = Item.query.order_by(Item.id.desc()).limit(9).all()
     return render_template('latest_items.html', items=items)
 
 
 @app.route('/category/<int:id>/items/new')
 def new_item(id):
+    ''' Form for creating a new Item '''
     form = NewItemForm()
     form.category_id.data = id
     return render_template('edit_item.html', form=form, action="/items")
@@ -77,6 +83,7 @@ def new_item(id):
 
 @app.route('/items', methods=['POST'])
 def create_item():
+    ''' Save a new Item in the database '''
     owner_id = session.get('user_id')
     if not owner_id:
         return ("You must be logged in to be able to create items", 401)
@@ -97,6 +104,7 @@ def create_item():
 
 @app.route('/item/<int:id>/json', methods=['GET'])
 def item_json(id):
+    ''' JSON representation of an Item '''
     item = Item.query.filter_by(id=id).first()
     if item:
         return jsonify(item=item.serialize_verbose)
@@ -107,6 +115,7 @@ def item_json(id):
 
 @app.route('/item/<int:id>', methods=['GET'])
 def show_item(id):
+    ''' Page showing Item's details such as description and image '''
     item = Item.query.filter_by(id=id).first()
     user_id = session.get('user_id')
     is_owner = user_id is not None and (user_id == item.owner_id)
@@ -119,6 +128,7 @@ def show_item(id):
 
 @app.route('/item/<int:id>', methods=['DELETE'])
 def delete_item(id):
+    ''' Delete an item '''
     user_id = session.get('user_id')
     if not user_id:
         return ("You must be logged in to be able to delete items", 401)
@@ -134,6 +144,7 @@ def delete_item(id):
 
 @app.route('/item/<int:id>/edit')
 def edit_item(id):
+    ''' Get form to edit an item '''
     item = Item.query.filter_by(id=id).first()
     if item:
         form = NewItemForm(obj=item)
@@ -143,6 +154,7 @@ def edit_item(id):
 
 @app.route('/item/<int:id>', methods=['PUT', 'POST'])
 def update_item(id):
+    ''' Updates an Item in the database '''
     user_id = session.get('user_id')
     if not user_id:
         return ("You must be logged in to be able to edit items", 401)
@@ -166,6 +178,7 @@ def update_item(id):
 
 @app.route('/catalog.json')
 def catalog_json():
+    ''' Get whole catalog in JSON format '''
     categories = Category.query.all()
     category_list = [category.serialize for category in categories]
     return jsonify(categories=category_list)
@@ -173,6 +186,7 @@ def catalog_json():
 
 @app.route('/catalog.xml')
 def catalog_xml():
+    ''' Get whole catalog in XML format '''
     categories = Category.query.all()
     category_list = [category.serialize for category in categories]
     xml = dicttoxml(category_list, custom_root="categories")
