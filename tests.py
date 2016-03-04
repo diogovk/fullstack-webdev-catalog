@@ -23,7 +23,9 @@ class WebCatalogCase(unittest.TestCase):
         self.app = web_catalog.app.test_client()
 
     def login(self):
-        """ Mock login, as to avoid hitting third party auth servers in tests """
+        """
+        Mock login, as to avoid hitting third party auth servers in tests
+        """
         with self.app.session_transaction() as sess:
             sess['access_token'] = 'thisismyaccesstoken'
             sess['gplus_id'] = 66666666

@@ -19,6 +19,7 @@ class Category(db.Model):
                 "items": [item.serialize for item in self.items]
                 }
 
+
 class User(db.Model):
     """
     A user of the webapp.
